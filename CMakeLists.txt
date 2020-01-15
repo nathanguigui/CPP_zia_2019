@@ -11,7 +11,7 @@ if ( MSVC )
     #windows
 endif( MSVC )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe -j4 -lboost")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe")
 
 #include_directories(
 #    ${CMAKE_CURRENT_BINARY_DIR}
@@ -28,7 +28,7 @@ target_link_libraries(zia ${CONAN_LIBS})
 message("
 
 ,gggggggg,          ,a8a,           ,ggg,  
-d8P""""""Y8b,       ,8" "8,         dP""8I  
+d8P\"\"\"\"\"\"Y8b,       ,8\" \"8,         dP\"\"8I  
 88,_a     `8b       d8   8b        dP   88  
 `Y8P\"      88       88   88       dP    88  
            88       88   88      ,8'    88  
