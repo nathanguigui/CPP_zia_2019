@@ -29,6 +29,13 @@ set(CORE_SRC
 add_executable(zia ${CORE_SRC})
 target_link_libraries(zia ${CONAN_LIBS})
 
+add_custom_command(TARGET zia
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/build/bin/
+        ${CMAKE_BINARY_DIR}/../
+        COMMENT "Compilation done, executable copied."
+)
+
 message("
 
 ,gggggggg,          ,a8a,           ,ggg,  
