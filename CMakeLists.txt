@@ -24,7 +24,7 @@ set(CORE_SRC
         core/TcpServer/TcpServer.hpp
         core/TcpConnection/TcpConnection.cpp
         core/TcpConnection/TcpConnection.hpp
-        core/TcpHandler/TcpHandler.cpp core/TcpHandler/TcpHandler.hpp)
+        core/TcpHandler/TcpHandler.cpp core/TcpHandler/TcpHandler.hpp core/HttpParser/HttpParser.cpp core/HttpParser/HttpParser.hpp core/HttpParser/HttpDeserialyzer.cpp core/HttpParser/HttpDeserialyzer.hpp core/HttpParser/HttpRequest.hpp)
 
 add_executable(zia ${CORE_SRC})
 target_link_libraries(zia ${CONAN_LIBS})

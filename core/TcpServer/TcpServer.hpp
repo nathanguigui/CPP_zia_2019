@@ -11,10 +11,7 @@
 
 class TcpServer {
 public:
-    explicit TcpServer(boost::asio::io_service& io_service)
-    : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 25565)), ioService_(io_service) {
-        start_accept();
-    }
+    explicit TcpServer(boost::asio::io_service& io_service);
 private:
     void start_accept();
     void handle_accept(TcpConnection::pointer new_connection, const boost::system::error_code& error);

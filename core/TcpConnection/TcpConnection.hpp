@@ -8,13 +8,20 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/array.hpp>
+#include <core/HttpParser/HttpDeserialyzer.hpp>
+#include <core/HttpParser/HttpRequest.hpp>
+#include "core/HttpParser/HttpParser.hpp"
 
+using namespace boost;
 
 class TcpConnection: public boost::enable_shared_from_this<TcpConnection> {
 public:
     typedef boost::shared_ptr<TcpConnection> pointer;
 
-    static pointer create(boost::asio::io_service& io_service);
+    explicit TcpConnection(boost::asio::io_service &io_service);
+
+    static pointer create(boost::asio::io_service &io_service);
 
     boost::asio::ip::tcp::socket& socket();
 
@@ -22,14 +29,30 @@ public:
 
 private:
 
-    explicit TcpConnection(boost::asio::io_service& io_service): socket_(io_service) {
 
-    }
+    void readData();
 
-    void handle_write(const boost::system::error_code& error, size_t bytes_transferred);
+    void writeData();
+
+    void handle_write(const boost::system::error_code &error, size_t bytes_transferred);
+
+    void handle_read(const boost::system::error_code &err, size_t bytes_transferred);
 
     boost::asio::ip::tcp::socket socket_;
-    std::string message_;
+
+    std::string outputBuffer_;
+
+    char *inputBuffer_;
+
+    int maxPacketLen = 8192;
+
+    boost::array<char, 8192> buffer_;
+
+    HttpDeserialyzer httpParser_;
+
+    HttpRequest httpRequest_;
+
+    asio::streambuf request_;
 };
 
 

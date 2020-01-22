@@ -1,6 +1,8 @@
 #!/bin/bash
-rm -rf build
-mkdir build
+if [ $# -eq 2 ]; then
+  rm -rf build
+  mkdir build
+fi
 cd build
 conan install ..
 if [[ "$OSTYPE" == "linux-gnu" ]]; then

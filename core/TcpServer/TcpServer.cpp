@@ -4,6 +4,10 @@
 
 #include "TcpServer.hpp"
 
+TcpServer::TcpServer(boost::asio::io_service &io_service) : acceptor_(io_service, {{}, 25565}), ioService_(io_service) {
+    start_accept();
+}
+
 void TcpServer::start_accept() {
     TcpConnection::pointer new_connection = TcpConnection::create(ioService_);
 
