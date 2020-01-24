@@ -7,8 +7,13 @@
 
 ServerConfig::ServerConfig(std::string &serverConfigPath) : serverConfigPath_(serverConfigPath), configValid_(false) {
     std::ifstream in(serverConfigPath);
-    in >> this->serverConfig_;
-    this->checkConfigValidity();
+    try {
+        in >> this->serverConfig_;
+        this->checkConfigValidity();
+    } catch (Json::RuntimeError &e) {
+        std::cout << "Config file not found." << std::endl;
+    }
+
 }
 
 bool ServerConfig::isConfigValid() const {

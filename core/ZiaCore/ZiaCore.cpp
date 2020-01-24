@@ -12,15 +12,12 @@ ZiaCore::ZiaCore() {
 }
 
 void ZiaCore::processParams(int ac, char **av) {
-    if (ac == 1)
-        ZiaCore::printHelp();
     const char *const short_opts = "h:c:k:v";
     const option long_opts[] = {
             {"help", no_argument, nullptr, 'h'},
             {"config", required_argument, nullptr, 'c'},
             {"check", no_argument, nullptr, 'k'},
             {"version", no_argument, nullptr, 'v'},
-            {nullptr, no_argument, nullptr, 0}
     };
     while (true) {
         const auto opt = getopt_long(ac, av, short_opts, long_opts, nullptr);

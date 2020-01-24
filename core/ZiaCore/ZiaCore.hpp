@@ -29,7 +29,7 @@ private:
     TcpServer *httpServer_{};
     boost::asio::io_service ioService_;
     ServerConfig *serverConfig_;
-    ZiaArgs argsProps_{"", false, false};
+    ZiaArgs argsProps_{"./config/server.json", false, false};
     //TcpServer sslServer_;
 };
 

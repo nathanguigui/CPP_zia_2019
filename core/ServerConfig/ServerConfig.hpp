@@ -20,8 +20,6 @@ private:
     Json::Value serverConfig_;
     std::string &serverConfigPath_;
     bool configValid_;
-
-    bool toto;
 };
 
 
