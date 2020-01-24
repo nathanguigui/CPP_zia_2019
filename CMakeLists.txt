@@ -7,16 +7,7 @@ add_definitions("-std=c++11")
 include(${CMAKE_SOURCE_DIR}/build/conanbuildinfo.cmake)
 conan_basic_setup()
 
-if ( MSVC )
-    #windows
-endif( MSVC )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe")
-
-include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
 
 
 
@@ -32,9 +23,6 @@ set(TCP_SRC
         core/TcpHandler/TcpHandler.hpp
 )
 
-ADD_LIBRARY(TcpZiaLib SHARED ${TCP_SRC})
-TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
-
 
 
 ############
@@ -46,8 +34,6 @@ set(HTTP_PARSER_SRC
         core/HttpParser/HttpRequest.hpp
 )
 
-ADD_LIBRARY(HttpParserZiaLib SHARED ${HTTP_PARSER_SRC})
-TARGET_LINK_LIBRARIES(HttpParserZiaLib ${CONAN_LIBS})
 
 
 
@@ -57,10 +43,8 @@ TARGET_LINK_LIBRARIES(HttpParserZiaLib ${CONAN_LIBS})
 set(CONFIG_SRC
         core/ServerConfig/ServerConfig.cpp
         core/ServerConfig/ServerConfig.hpp
-)
+        core/VirtualHostsConfig/VirtualHostsConfig.cpp core/VirtualHostsConfig/VirtualHostsConfig.hpp)
 
-ADD_LIBRARY(ConfigZiaLib SHARED ${CONFIG_SRC})
-TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
 
 
 
@@ -72,6 +56,26 @@ set(CORE_SRC
         core/ZiaCore/ZiaCore.hpp
         core/ZiaCore/ZiaArgs.hpp core/ZiaCore/ZiaVersion.hpp)
 
+
+
+
+
+if ( MSVC )
+    add_executable(zia ${CORE_SRC} ${CONFIG_SRC} ${HTTP_PARSER_SRC} ${TCP_SRC})
+    target_link_libraries(zia ${CONAN_LIBS})
+else( MSVC )
+
+
+ADD_LIBRARY(TcpZiaLib SHARED ${TCP_SRC})
+TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
+
+
+ADD_LIBRARY(HttpParserZiaLib SHARED ${HTTP_PARSER_SRC})
+TARGET_LINK_LIBRARIES(HttpParserZiaLib ${CONAN_LIBS})
+
+ADD_LIBRARY(ConfigZiaLib SHARED ${CONFIG_SRC})
+TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
+
 ADD_LIBRARY(ZiaCore SHARED ${CORE_SRC})
 TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
@@ -79,6 +83,16 @@ TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
 add_executable(zia core/main.cpp)
 target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpParserZiaLib ConfigZiaLib)
+
+endif( MSVC )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe")
+
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 
 
 
