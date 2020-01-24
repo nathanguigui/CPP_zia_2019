@@ -15,11 +15,12 @@ bool ServerConfig::isConfigValid() const {
     return configValid_;
 }
 
-void ServerConfig::checkConfigValidity() {
+bool ServerConfig::checkConfigValidity() {
     if (serverConfig_["default_http_port"].isNumeric() && serverConfig_["pid"].isString()
-    && serverConfig_["hosts"].isString()) {
+    && serverConfig_["hosts"].isString() && serverConfig_["modules_enabled"].isString()) {
             configValid_ = true;
             std::cout << "Server config valid." << std::endl;
     } if (!configValid_)
         std::cout << "Server config invalid." << std::endl;
+    return configValid_;
 }

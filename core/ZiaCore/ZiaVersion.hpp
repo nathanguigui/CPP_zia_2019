@@ -1,0 +1,13 @@
+//
+// Created by guigui on 1/24/20.
+//
+
+#ifndef CPP_RTYPE_2019_ZIAVERSION_HPP
+#define CPP_RTYPE_2019_ZIAVERSION_HPP
+
+#define ZIA_VERSION_STRING "0.1.0"
+#define ZIA_VERSION_MAJOR 0
+#define ZIA_VERSION_MINOR 1
+#define ZIA_VERSION_PATCH 0
+
+#endif //CPP_RTYPE_2019_ZIAVERSION_HPP

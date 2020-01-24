@@ -15,7 +15,7 @@ public:
 
 private:
 
-    void checkConfigValidity();
+    bool checkConfigValidity();
 
     Json::Value serverConfig_;
     std::string &serverConfigPath_;
