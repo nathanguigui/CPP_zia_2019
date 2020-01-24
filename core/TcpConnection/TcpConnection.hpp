@@ -11,7 +11,6 @@
 #include <boost/array.hpp>
 #include <core/HttpParser/HttpDeserialyzer.hpp>
 #include <core/HttpParser/HttpRequest.hpp>
-#include "core/HttpParser/HttpParser.hpp"
 
 using namespace boost;
 

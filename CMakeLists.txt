@@ -18,17 +18,66 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-set(CORE_SRC
-        core/main.cpp
+
+
+###########
+# TCP LIB #
+###########
+set(TCP_SRC
         core/TcpServer/TcpServer.cpp
         core/TcpServer/TcpServer.hpp
         core/TcpConnection/TcpConnection.cpp
         core/TcpConnection/TcpConnection.hpp
-        core/TcpHandler/TcpHandler.cpp core/TcpHandler/TcpHandler.hpp core/HttpParser/HttpParser.cpp core/HttpParser/HttpParser.hpp core/HttpParser/HttpDeserialyzer.cpp core/HttpParser/HttpDeserialyzer.hpp core/HttpParser/HttpRequest.hpp)
+        core/TcpHandler/TcpHandler.cpp
+        core/TcpHandler/TcpHandler.hpp
+)
+
+ADD_LIBRARY(TcpZiaLib SHARED ${TCP_SRC})
+TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
+
+
+
+############
+# HTTP LIB #
+############
+set(HTTP_PARSER_SRC
+        core/HttpParser/HttpDeserialyzer.cpp
+        core/HttpParser/HttpDeserialyzer.hpp
+        core/HttpParser/HttpRequest.hpp
+)
+
+ADD_LIBRARY(HttpParserZiaLib SHARED ${HTTP_PARSER_SRC})
+TARGET_LINK_LIBRARIES(HttpParserZiaLib ${CONAN_LIBS})
+
+
+
+##############
+# CONFIG LIB #
+##############
+set(CONFIG_SRC
+        core/ServerConfig.cpp core/ServerConfig.hpp
+)
+
+ADD_LIBRARY(ConfigZiaLib SHARED ${CONFIG_SRC})
+TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
+
+
+
+##############
+# EXECUTABLE #
+##############
+set(CORE_SRC
+        core/main.cpp
+)
 
 add_executable(zia ${CORE_SRC})
-target_link_libraries(zia ${CONAN_LIBS})
+target_link_libraries(zia ${CONAN_LIBS} TcpZiaLib HttpParserZiaLib ConfigZiaLib)
 
+
+
+########
+# COPY #
+########
 add_custom_command(TARGET zia
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/build/bin/
