@@ -9,7 +9,7 @@
 #include <boost/version.hpp>
 #include <json/version.h>
 #include "core/TcpServer/TcpServer.hpp"
-#include "core/ServerConfig.hpp"
+#include "core/ServerConfig/ServerConfig.hpp"
 #include "ZiaArgs.hpp"
 
 class ZiaCore {

@@ -55,8 +55,8 @@ TARGET_LINK_LIBRARIES(HttpParserZiaLib ${CONAN_LIBS})
 # CONFIG LIB #
 ##############
 set(CONFIG_SRC
-        core/ServerConfig.cpp
-        core/ServerConfig.hpp
+        core/ServerConfig/ServerConfig.cpp
+        core/ServerConfig/ServerConfig.hpp
 )
 
 ADD_LIBRARY(ConfigZiaLib SHARED ${CONFIG_SRC})

@@ -4,6 +4,7 @@
 
 #include <getopt.h>
 #include <iostream>
+#include <core/ServerConfig/ServerConfig.hpp>
 #include "ZiaCore.hpp"
 #include "ZiaVersion.hpp"
 
@@ -12,7 +13,7 @@ ZiaCore::ZiaCore() {
 
 void ZiaCore::processParams(int ac, char **av) {
     if (ac == 1)
-        this->printHelp();
+        ZiaCore::printHelp();
     const char *const short_opts = "h:c:k:v";
     const option long_opts[] = {
             {"help", no_argument, nullptr, 'h'},
