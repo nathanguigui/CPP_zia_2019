@@ -1,0 +1,9 @@
+{
+  "hosts": "./config/hosts/",
+  "pid": "./config/zia.pid",
+  "default_http_port": 8080,
+  "default_ssl_port": 233,
+  "modules_available": "./config/mod-available",
+  "modules_enabled": "./config/mod-enabled",
+  "modules_safe_load": false
+}

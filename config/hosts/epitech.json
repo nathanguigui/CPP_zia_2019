@@ -1,0 +1,8 @@
+{
+  "hosts": [{
+    "hostname": "10.109.XX.XX",
+    "host_root": "/home/guigui/",
+    "follow_symlinks": true,
+    "404_page": null
+  }]
+}
