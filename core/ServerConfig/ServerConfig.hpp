@@ -13,6 +13,16 @@ public:
 
     bool isConfigValid() const;
 
+    const Json::Value &getServerConfig() const;
+
+    int getDefaultHttpPort() const;
+
+    const std::string &getPidPath() const;
+
+    const std::string &getHostsPath() const;
+
+    const std::string &getModulesEnabledPath() const;
+
 private:
 
     bool checkConfigValidity();
@@ -20,6 +30,10 @@ private:
     Json::Value serverConfig_;
     std::string &serverConfigPath_;
     bool configValid_;
+    int defaultHttpPort_;
+    std::string pidPath_;
+    std::string hostsPath_;
+    std::string modulesEnabledPath_;
 };
 
 

@@ -5,17 +5,18 @@
 #ifndef CPP_RTYPE_2019_ZIACORE_HPP
 #define CPP_RTYPE_2019_ZIACORE_HPP
 
-#include <boost/asio.hpp>
-#include <boost/version.hpp>
-#include <json/version.h>
-#include "core/TcpServer/TcpServer.hpp"
-#include "core/ServerConfig/ServerConfig.hpp"
-#include "ZiaArgs.hpp"
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 
 #else
     #include <getopt.h>
 #endif
+#include <boost/asio.hpp>
+#include <boost/version.hpp>
+#include <json/version.h>
+#include "core/TcpServer/TcpServer.hpp"
+#include "core/ServerConfig/ServerConfig.hpp"
+#include <core/VirtualHostsConfig/VirtualHostsConfig.hpp>
+#include "ZiaArgs.hpp"
 
 class ZiaCore {
 public:
@@ -34,6 +35,7 @@ private:
     TcpServer *httpServer_{};
     boost::asio::io_service ioService_;
     ServerConfig *serverConfig_;
+    VirtualHostsConfig *virtualHostsConfig_;
     ZiaArgs argsProps_{"./config/server.json", false, false};
     //TcpServer sslServer_;
 };

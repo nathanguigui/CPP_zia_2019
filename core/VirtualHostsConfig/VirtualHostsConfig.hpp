@@ -7,18 +7,27 @@
 
 
 #include <json/json.h>
+#include <iostream>
+#include <filesystem>
+#include <fstream>
 
 class VirtualHostsConfig {
 public:
-    explicit VirtualHostsConfig(std::string &hostsConfigPath);
+
+    explicit VirtualHostsConfig(std::string path);
 
 private:
 
+    void config(Json::Value &newHost);
+
+    static void update(Json::Value &currentHosts, Json::Value &newHost);
+
     bool checkConfigValidity();
 
-    Json::Value hostsConfig_;
+    std::vector<Json::Value> hostsConfig_;
     std::string &hostsConfigPath_;
     bool configValid_;
+    int fileCount_;
 };
 
 

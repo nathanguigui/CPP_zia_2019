@@ -13,7 +13,7 @@ ZiaCore::ZiaCore() {
 void ZiaCore::processParams(int ac, char **av) {
 
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-
+        /// TODO check argument on windows
     #else
         const char *const short_opts = "h:c:k:v";
         const option long_opts[] = {
@@ -58,8 +58,11 @@ void ZiaCore::startZia() {
         ZiaCore::printVersion();
     else {
         serverConfig_ = new ServerConfig(argsProps_.configPath);
-        if (serverConfig_->isConfigValid() && !argsProps_.checkOnly)
-            this->startServer();
+        if (serverConfig_->isConfigValid()) {
+            virtualHostsConfig_ = new VirtualHostsConfig(serverConfig_->getHostsPath());
+            if (!argsProps_.checkOnly)
+                this->startServer();
+        }
     }
 }
 

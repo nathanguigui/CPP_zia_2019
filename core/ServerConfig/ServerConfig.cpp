@@ -21,11 +21,38 @@ bool ServerConfig::isConfigValid() const {
 }
 
 bool ServerConfig::checkConfigValidity() {
-    if (serverConfig_["default_http_port"].isNumeric() && serverConfig_["pid"].isString()
-    && serverConfig_["hosts"].isString() && serverConfig_["modules_enabled"].isString()) {
-            configValid_ = true;
-            std::cout << "Server config valid." << std::endl;
-    } if (!configValid_)
+    int score = 0;
+    if (serverConfig_["default_http_port"].isNumeric())
+        defaultHttpPort_ = serverConfig_["default_http_port"].asInt(); score++;
+    if (serverConfig_["pid"].isString())
+        pidPath_ = serverConfig_["pid"].asString(); score++;
+    if (serverConfig_["hosts"].isString())
+        hostsPath_ = serverConfig_["hosts"].asString(); score++;
+    if (serverConfig_["modules_enabled"].isString())
+        modulesEnabledPath_ = serverConfig_["modules_enabled"].asString(); score++;
+    if (score == 4)
+        std::cout << "Server config valid." << std::endl; configValid_ = true;
+    if (!configValid_)
         std::cout << "Server config invalid." << std::endl;
     return configValid_;
+}
+
+const Json::Value &ServerConfig::getServerConfig() const {
+    return serverConfig_;
+}
+
+int ServerConfig::getDefaultHttpPort() const {
+    return defaultHttpPort_;
+}
+
+const std::string &ServerConfig::getPidPath() const {
+    return pidPath_;
+}
+
+const std::string &ServerConfig::getHostsPath() const {
+    return hostsPath_;
+}
+
+const std::string &ServerConfig::getModulesEnabledPath() const {
+    return modulesEnabledPath_;
 }
