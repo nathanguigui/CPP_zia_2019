@@ -11,6 +11,11 @@
 #include "core/TcpServer/TcpServer.hpp"
 #include "core/ServerConfig/ServerConfig.hpp"
 #include "ZiaArgs.hpp"
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+
+#else
+    #include <getopt.h>
+#endif
 
 class ZiaCore {
 public:

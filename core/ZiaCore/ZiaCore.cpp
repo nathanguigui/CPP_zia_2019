@@ -2,7 +2,6 @@
 // Created by guigui on 1/24/20.
 //
 
-#include <getopt.h>
 #include <iostream>
 #include <core/ServerConfig/ServerConfig.hpp>
 #include "ZiaCore.hpp"
@@ -12,32 +11,37 @@ ZiaCore::ZiaCore() {
 }
 
 void ZiaCore::processParams(int ac, char **av) {
-    const char *const short_opts = "h:c:k:v";
-    const option long_opts[] = {
-            {"help", no_argument, nullptr, 'h'},
-            {"config", required_argument, nullptr, 'c'},
-            {"check", no_argument, nullptr, 'k'},
-            {"version", no_argument, nullptr, 'v'},
-    };
-    while (true) {
-        const auto opt = getopt_long(ac, av, short_opts, long_opts, nullptr);
-        if (opt == -1)
-            break;
-        switch (opt) {
-            case 'c':
-                this->argsProps_.configPath = std::string(optarg);
+
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+
+    #else
+        const char *const short_opts = "h:c:k:v";
+        const option long_opts[] = {
+                {"help", no_argument, nullptr, 'h'},
+                {"config", required_argument, nullptr, 'c'},
+                {"check", no_argument, nullptr, 'k'},
+                {"version", no_argument, nullptr, 'v'},
+        };
+        while (true) {
+            const auto opt = getopt_long(ac, av, short_opts, long_opts, nullptr);
+            if (opt == -1)
                 break;
-            case 'k':
-                this->argsProps_.checkOnly = true;
-                break;
-            case 'v':
-                this->argsProps_.versionOnly = true;
-                break;
-            case 'h': case '?': default:
-                ZiaCore::printHelp();
-                break;
+            switch (opt) {
+                case 'c':
+                    this->argsProps_.configPath = std::string(optarg);
+                    break;
+                case 'k':
+                    this->argsProps_.checkOnly = true;
+                    break;
+                case 'v':
+                    this->argsProps_.versionOnly = true;
+                    break;
+                case 'h': case '?': default:
+                    ZiaCore::printHelp();
+                    break;
+            }
         }
-    }
+    #endif
 }
 
 void ZiaCore::printHelp() {
