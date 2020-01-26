@@ -47,21 +47,13 @@ void TcpConnection::handle_read(const boost::system::error_code &err, size_t byt
             /// API => got a valid request
             //request_handler_.handle_request(request_, reply_);
             /// API => response created
-            std::string buf("HTTP/1.0 400 Bad Request\r\nContent-Length: 8\r\nReferrer-Policy: no-referrer\r\nContent-Type: text/html; charset=UTF-8\r\nDate: Wed, 22 Jan 2020 16:46:10 GMT\r\n\r\nit works\r\n");
-            boost::array<char, 8192> tmp;
-            for (const auto &c : buf)
-                tmp.assign(c);
-            asio::async_write(socket_, asio::buffer(buf),
+            asio::async_write(socket_, asio::buffer(httpResponseMaker_.makeSuccessResponse("it works fine", "text/html")),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),
                             asio::placeholders::error,
                             asio::placeholders::bytes_transferred));
             /// API => response sent to client
         } else if (!result) {
-            std::string buf("HTTP/1.0 400 Bad Request\r\nContent-Length: 8\r\nReferrer-Policy: no-referrer\r\nContent-Type: text/html; charset=UTF-8\r\nDate: Wed, 22 Jan 2020 16:46:00 GMT\r\n\r\nit works\r\n");
-            boost::array<char, 8192> tmp;
-            for (const auto &c : buf)
-                tmp.assign(c);
-            asio::async_write(socket_, asio::buffer(tmp),
+            asio::async_write(socket_, asio::buffer(httpResponseMaker_.makeStockResponse(HttpResponseMaker::BAD_REQUEST)),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),
                             asio::placeholders::error,
                             asio::placeholders::bytes_transferred));

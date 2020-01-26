@@ -28,11 +28,12 @@ set(TCP_SRC
 ############
 # HTTP LIB #
 ############
-set(HTTP_PARSER_SRC
+set(HTTP_SRC
         core/HttpParser/HttpDeserialyzer.cpp
         core/HttpParser/HttpDeserialyzer.hpp
         core/HttpParser/HttpRequest.hpp
-)
+        core/HttpResponseMaker/HttpResponseMaker.cpp
+        core/HttpResponseMaker/HttpResponseMaker.hpp)
 
 
 
@@ -43,7 +44,8 @@ set(HTTP_PARSER_SRC
 set(CONFIG_SRC
         core/ServerConfig/ServerConfig.cpp
         core/ServerConfig/ServerConfig.hpp
-        core/VirtualHostsConfig/VirtualHostsConfig.cpp core/VirtualHostsConfig/VirtualHostsConfig.hpp)
+        core/VirtualHostsConfig/VirtualHostsConfig.cpp
+        core/VirtualHostsConfig/VirtualHostsConfig.hpp)
 
 
 
@@ -54,7 +56,8 @@ set(CONFIG_SRC
 set(CORE_SRC
         core/ZiaCore/ZiaCore.cpp
         core/ZiaCore/ZiaCore.hpp
-        core/ZiaCore/ZiaArgs.hpp core/ZiaCore/ZiaVersion.hpp)
+        core/ZiaCore/ZiaArgs.hpp
+        core/ZiaCore/ZiaVersion.hpp)
 
 
 
@@ -67,8 +70,8 @@ if ( MSVC )
     ADD_LIBRARY(TcpZiaLib STATIC ${TCP_SRC})
     TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
 
-    ADD_LIBRARY(HttpParserZiaLib STATIC ${HTTP_PARSER_SRC})
-    TARGET_LINK_LIBRARIES(HttpParserZiaLib ${CONAN_LIBS})
+    ADD_LIBRARY(HttpZiaLib STATIC ${HTTP_SRC})
+    TARGET_LINK_LIBRARIES(HttpZiaLib ${CONAN_LIBS})
 
     ADD_LIBRARY(ConfigZiaLib STATIC ${CONFIG_SRC})
     TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
@@ -77,10 +80,10 @@ if ( MSVC )
     TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
     add_executable(zia core/main.cpp)
-    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpParserZiaLib ConfigZiaLib)
+    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib)
 
 
-    #add_executable(zia ${CORE_SRC} ${CONFIG_SRC} ${HTTP_PARSER_SRC} ${TCP_SRC})
+    #add_executable(zia ${CORE_SRC} ${CONFIG_SRC} ${HTTP_SRC} ${TCP_SRC})
     #target_link_libraries(zia ${CONAN_LIBS})
 
 else( MSVC )
@@ -88,8 +91,8 @@ else( MSVC )
     ADD_LIBRARY(TcpZiaLib SHARED ${TCP_SRC})
     TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
 
-    ADD_LIBRARY(HttpParserZiaLib SHARED ${HTTP_PARSER_SRC})
-    TARGET_LINK_LIBRARIES(HttpParserZiaLib ${CONAN_LIBS})
+    ADD_LIBRARY(HttpZiaLib SHARED ${HTTP_SRC})
+    TARGET_LINK_LIBRARIES(HttpZiaLib ${CONAN_LIBS})
 
     ADD_LIBRARY(ConfigZiaLib SHARED ${CONFIG_SRC})
     TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
@@ -98,7 +101,7 @@ else( MSVC )
     TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
     add_executable(zia core/main.cpp)
-    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpParserZiaLib ConfigZiaLib)
+    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib)
 
 endif( MSVC )
 

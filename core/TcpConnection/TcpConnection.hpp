@@ -11,6 +11,7 @@
 #include <boost/array.hpp>
 #include <core/HttpParser/HttpDeserialyzer.hpp>
 #include <core/HttpParser/HttpRequest.hpp>
+#include <core/HttpResponseMaker/HttpResponseMaker.hpp>
 
 using namespace boost;
 
@@ -50,6 +51,8 @@ private:
     HttpDeserialyzer httpParser_;
 
     HttpRequest httpRequest_;
+
+    HttpResponseMaker httpResponseMaker_;
 
     asio::streambuf request_;
 };
