@@ -16,6 +16,10 @@ public:
 
     explicit VirtualHostsConfig(std::string path);
 
+    const std::vector<Json::Value> &getHostsConfig() const;
+
+    bool hasHostname(const std::string& hostname);
+
 private:
 
     void config(Json::Value &newHost);

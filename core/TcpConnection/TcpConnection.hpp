@@ -12,6 +12,8 @@
 #include <core/HttpParser/HttpDeserialyzer.hpp>
 #include <core/HttpParser/HttpRequest.hpp>
 #include <core/HttpResponseMaker/HttpResponseMaker.hpp>
+#include <core/VirtualHostsConfig/VirtualHostsConfig.hpp>
+#include <core/VirtualHostManager/VirtualHostManager.hpp>
 
 using namespace boost;
 
@@ -19,9 +21,9 @@ class TcpConnection: public boost::enable_shared_from_this<TcpConnection> {
 public:
     typedef boost::shared_ptr<TcpConnection> pointer;
 
-    explicit TcpConnection(boost::asio::io_service &io_service);
+    explicit TcpConnection(asio::io_service &io_service, VirtualHostManager *vhostsConfig);
 
-    static pointer create(boost::asio::io_service &io_service);
+    static TcpConnection::pointer create(asio::io_service &io_service, VirtualHostManager *vhostsConfig);
 
     boost::asio::ip::tcp::socket& socket();
 
@@ -37,6 +39,8 @@ private:
     void handle_write(const boost::system::error_code &error, size_t bytes_transferred);
 
     void handle_read(const boost::system::error_code &err, size_t bytes_transferred);
+
+    VirtualHostManager *virtualHostsConfig_;
 
     boost::asio::ip::tcp::socket socket_;
 

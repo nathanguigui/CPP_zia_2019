@@ -44,3 +44,17 @@ void VirtualHostsConfig::config(Json::Value &newHost) {
                 if (newHost["hosts"][i]["host_root"].isString())
                     this->hostsConfig_.push_back(newHost["hosts"][i]);
 }
+
+const std::vector<Json::Value> &VirtualHostsConfig::getHostsConfig() const {
+    return hostsConfig_;
+}
+
+bool VirtualHostsConfig::hasHostname(const std::string& hostname) {
+    for (const auto &host: hostsConfig_) {
+        if (host["hostname"].isString()) {
+            if (hostname.find(host["hostname"].asString()) != std::string::npos)
+                return true;
+        }
+    }
+    return false;
+}

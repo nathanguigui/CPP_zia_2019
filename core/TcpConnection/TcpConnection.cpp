@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <core/VirtualHostManager/VirtualHostManager.hpp>
 #include "TcpConnection.hpp"
 
 std::string convertToString(char* a) {
@@ -14,8 +15,8 @@ std::string convertToString(char* a) {
     return s;
 }
 
-TcpConnection::pointer TcpConnection::create(asio::io_service &io_service) {
-    return pointer(new TcpConnection(io_service));
+TcpConnection::pointer TcpConnection::create(asio::io_service &io_service, VirtualHostManager *vhostsConfig) {
+    return pointer(new TcpConnection(io_service, vhostsConfig));
 }
 
 asio::ip::tcp::socket &TcpConnection::socket() {
@@ -47,7 +48,13 @@ void TcpConnection::handle_read(const boost::system::error_code &err, size_t byt
             /// API => got a valid request
             //request_handler_.handle_request(request_, reply_);
             /// API => response created
-            asio::async_write(socket_, asio::buffer(httpResponseMaker_.makeSuccessResponse("it works fine", "text/html")),
+            std::string tmp;
+            //try {
+                tmp = httpResponseMaker_.makeSuccessResponse(virtualHostsConfig_->access(httpRequest_), "text/html");
+            /*} catch(std::exception &e) {
+                tmp = httpResponseMaker_.makeStockResponse(HttpResponseMaker::ResponseCode::NOT_FOUND);
+            }*/
+            asio::async_write(socket_, asio::buffer(tmp),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),
                             asio::placeholders::error,
                             asio::placeholders::bytes_transferred));
@@ -92,6 +99,6 @@ void TcpConnection::writeData() {
                         asio::placeholders::bytes_transferred));
 }
 
-TcpConnection::TcpConnection(asio::io_service &io_service): socket_(io_service) {
+TcpConnection::TcpConnection(asio::io_service &io_service, VirtualHostManager *vhostsConfig) : socket_(io_service), virtualHostsConfig_(vhostsConfig) {
     this->inputBuffer_ = (char*)malloc(this->maxPacketLen);
 }

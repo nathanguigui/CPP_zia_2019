@@ -68,7 +68,7 @@ void ZiaCore::startZia() {
 
 void ZiaCore::startServer() {
     try {
-        httpServer_ = new TcpServer(ioService_);
+        httpServer_ = new TcpServer(ioService_, serverConfig_, virtualHostsConfig_);
         ioService_.run();
     } catch (std::exception& e) {
         std::cerr << e.what() << std::endl;

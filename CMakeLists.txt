@@ -45,8 +45,16 @@ set(CONFIG_SRC
         core/ServerConfig/ServerConfig.cpp
         core/ServerConfig/ServerConfig.hpp
         core/VirtualHostsConfig/VirtualHostsConfig.cpp
-        core/VirtualHostsConfig/VirtualHostsConfig.hpp)
+        core/VirtualHostsConfig/VirtualHostsConfig.hpp core/VirtualHostManager/VirtualHostManager.cpp core/VirtualHostManager/VirtualHostManager.hpp)
 
+
+
+
+#############
+# VHOST LIB #
+#############
+set(VHOST_SRC
+        core/VirtualHostManager/VirtualHostManager.cpp core/VirtualHostManager/VirtualHostManager.hpp)
 
 
 
@@ -76,11 +84,14 @@ if ( MSVC )
     ADD_LIBRARY(ConfigZiaLib STATIC ${CONFIG_SRC})
     TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
 
+    ADD_LIBRARY(VhostZiaLib STATIC ${VHOST_SRC})
+    TARGET_LINK_LIBRARIES(VhostZiaLib ${CONAN_LIBS})
+
     ADD_LIBRARY(ZiaCore STATIC ${CORE_SRC})
     TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
     add_executable(zia core/main.cpp)
-    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib)
+    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib)
 
 
     #add_executable(zia ${CORE_SRC} ${CONFIG_SRC} ${HTTP_SRC} ${TCP_SRC})
@@ -97,11 +108,14 @@ else( MSVC )
     ADD_LIBRARY(ConfigZiaLib SHARED ${CONFIG_SRC})
     TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
 
+    ADD_LIBRARY(VhostZiaLib SHARED ${VHOST_SRC})
+    TARGET_LINK_LIBRARIES(VhostZiaLib ${CONAN_LIBS})
+
     ADD_LIBRARY(ZiaCore SHARED ${CORE_SRC})
     TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
     add_executable(zia core/main.cpp)
-    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib)
+    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib)
 
 endif( MSVC )
 
