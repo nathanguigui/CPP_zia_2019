@@ -1,7 +1,7 @@
 {
   "hosts": [{
     "hostname": "10.109.XX.XX",
-    "host_root": "/home/guigui/",
+    "host_root": "/home/guigui/epitech",
     "follow_symlinks": true,
     "404_page": null
   }]
