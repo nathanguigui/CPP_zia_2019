@@ -15,7 +15,8 @@
 #include <json/version.h>
 #include "core/TcpServer/TcpServer.hpp"
 #include "core/ServerConfig/ServerConfig.hpp"
-#include <core/VirtualHostsConfig/VirtualHostsConfig.hpp>
+#include "core/VirtualHostsConfig/VirtualHostsConfig.hpp"
+#include "core/ModuleManager/ModuleManager.hpp"
 #include "ZiaArgs.hpp"
 
 class ZiaCore {
@@ -36,6 +37,7 @@ private:
     boost::asio::io_service ioService_;
     ServerConfig *serverConfig_;
     VirtualHostsConfig *virtualHostsConfig_;
+    ModuleManager *moduleManager_;
     ZiaArgs argsProps_{"./config/server.json", false, false};
     //TcpServer sslServer_;
 };

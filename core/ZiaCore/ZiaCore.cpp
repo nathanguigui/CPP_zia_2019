@@ -58,6 +58,7 @@ void ZiaCore::startZia() {
         ZiaCore::printVersion();
     else {
         serverConfig_ = new ServerConfig(argsProps_.configPath);
+        moduleManager_ = new ModuleManager(serverConfig_->getModulesEnabledPath());
         if (serverConfig_->isConfigValid()) {
             virtualHostsConfig_ = new VirtualHostsConfig(serverConfig_->getHostsPath());
             if (!argsProps_.checkOnly)
@@ -68,7 +69,7 @@ void ZiaCore::startZia() {
 
 void ZiaCore::startServer() {
     try {
-        httpServer_ = new TcpServer(ioService_, serverConfig_, virtualHostsConfig_);
+        httpServer_ = new TcpServer(ioService_, serverConfig_, virtualHostsConfig_, moduleManager_);
         ioService_.run();
     } catch (std::exception& e) {
         std::cerr << e.what() << std::endl;

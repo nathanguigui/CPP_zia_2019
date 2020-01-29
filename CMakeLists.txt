@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-project(CPP_rtype_2019)
+project(CPP_zia_2019)
 
 add_definitions("-std=c++17")
 
@@ -31,10 +31,8 @@ set(TCP_SRC
 set(HTTP_SRC
         core/HttpParser/HttpDeserialyzer.cpp
         core/HttpParser/HttpDeserialyzer.hpp
-        core/HttpParser/HttpRequest.hpp
         core/HttpResponseMaker/HttpResponseMaker.cpp
         core/HttpResponseMaker/HttpResponseMaker.hpp)
-
 
 
 
@@ -45,8 +43,9 @@ set(CONFIG_SRC
         core/ServerConfig/ServerConfig.cpp
         core/ServerConfig/ServerConfig.hpp
         core/VirtualHostsConfig/VirtualHostsConfig.cpp
-        core/VirtualHostsConfig/VirtualHostsConfig.hpp core/VirtualHostManager/VirtualHostManager.cpp core/VirtualHostManager/VirtualHostManager.hpp)
-
+        core/VirtualHostsConfig/VirtualHostsConfig.hpp
+        core/VirtualHostManager/VirtualHostManager.cpp
+        core/VirtualHostManager/VirtualHostManager.hpp)
 
 
 
@@ -54,7 +53,18 @@ set(CONFIG_SRC
 # VHOST LIB #
 #############
 set(VHOST_SRC
-        core/VirtualHostManager/VirtualHostManager.cpp core/VirtualHostManager/VirtualHostManager.hpp)
+        core/VirtualHostManager/VirtualHostManager.cpp
+        core/VirtualHostManager/VirtualHostManager.hpp)
+
+
+
+###############
+# MODULES LIB #
+###############
+set(MODULES_LIB
+        core/ModuleManager/ModuleManager.cpp
+        core/ModuleManager/ModuleManager.hpp
+        zia_modules/includes/IModule/IModule.hpp)
 
 
 
@@ -69,6 +79,13 @@ set(CORE_SRC
 
 
 
+##############
+# LOG MODULE #
+##############
+set(LOG_MODULE_SRC
+        zia_modules/example/LogModule/LogModule.cpp
+        zia_modules/example/LogModule/LogModule.hpp
+        )
 
 
 if ( MSVC )
@@ -99,23 +116,29 @@ if ( MSVC )
 
 else( MSVC )
 
-    ADD_LIBRARY(TcpZiaLib SHARED ${TCP_SRC})
+    ADD_LIBRARY(TcpZiaLib ${TCP_SRC})
     TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
 
-    ADD_LIBRARY(HttpZiaLib SHARED ${HTTP_SRC})
+    ADD_LIBRARY(HttpZiaLib ${HTTP_SRC})
     TARGET_LINK_LIBRARIES(HttpZiaLib ${CONAN_LIBS})
 
-    ADD_LIBRARY(ConfigZiaLib SHARED ${CONFIG_SRC})
+    ADD_LIBRARY(ConfigZiaLib ${CONFIG_SRC})
     TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
 
-    ADD_LIBRARY(VhostZiaLib SHARED ${VHOST_SRC})
+    ADD_LIBRARY(VhostZiaLib ${VHOST_SRC})
     TARGET_LINK_LIBRARIES(VhostZiaLib ${CONAN_LIBS})
 
-    ADD_LIBRARY(ZiaCore SHARED ${CORE_SRC})
+    ADD_LIBRARY(ZiaCore ${CORE_SRC})
     TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
+    ADD_LIBRARY(ModulesZiaLib ${MODULES_LIB})
+    TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
+
+
+    ADD_LIBRARY(LogModule SHARED ${LOG_MODULE_SRC})
+
     add_executable(zia core/main.cpp)
-    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib)
+    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib ModulesZiaLib)
 
 endif( MSVC )
 
@@ -138,6 +161,13 @@ add_custom_command(TARGET zia
         ${CMAKE_BINARY_DIR}/../
         COMMENT "Compilation done, executable copied."
 )
+
+add_custom_command(TARGET LogModule
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/build/lib/*.so
+        ${CMAKE_BINARY_DIR}/../config/mod-available/
+        COMMENT "Modules compiled and copied to default mod-available folder."
+        )
 
 message("
 

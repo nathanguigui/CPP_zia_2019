@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <core/VirtualHostManager/VirtualHostManager.hpp>
+#include <core/ModuleManager/ModuleManager.hpp>
 #include "TcpConnection.hpp"
 
 std::string convertToString(char* a) {
@@ -15,8 +16,8 @@ std::string convertToString(char* a) {
     return s;
 }
 
-TcpConnection::pointer TcpConnection::create(asio::io_service &io_service, VirtualHostManager *vhostsConfig) {
-    return pointer(new TcpConnection(io_service, vhostsConfig));
+TcpConnection::pointer TcpConnection::create(asio::io_service &io_service, VirtualHostManager *vhostsConfig, ModuleManager *moduleManager) {
+    return pointer(new TcpConnection(io_service, vhostsConfig, moduleManager));
 }
 
 asio::ip::tcp::socket &TcpConnection::socket() {
@@ -45,32 +46,26 @@ void TcpConnection::handle_read(const boost::system::error_code &err, size_t byt
         boost::tribool result;
         boost::tie(result, boost::tuples::ignore) = httpParser_.parse(httpRequest_, buffer_.data(), buffer_.data() + bytes_transferred);
         if (result) {
-            /// API => got a valid request
-            //request_handler_.handle_request(request_, reply_);
-            /// API => response created
+            httpRequest_.valid = true;
+            this->moduleManager_->handleRequest(httpRequest_);
             std::string tmp;
-            //try {
-                tmp = httpResponseMaker_.makeSuccessResponse(virtualHostsConfig_->access(httpRequest_), "text/html");
-            /*} catch(std::exception &e) {
-                tmp = httpResponseMaker_.makeStockResponse(HttpResponseMaker::ResponseCode::NOT_FOUND);
-            }*/
+            tmp = httpResponseMaker_.makeSuccessResponse(virtualHostsConfig_->access(httpRequest_), "text/html");
+            this->moduleManager_->handlePreResponse(httpRequest_, httpResponse_);
             asio::async_write(socket_, asio::buffer(tmp),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),
                             asio::placeholders::error,
                             asio::placeholders::bytes_transferred));
-            /// API => response sent to client
+            this->moduleManager_->handlePostResponse(httpRequest_, httpResponse_);
         } else if (!result) {
+            httpRequest_.valid = false;
+            this->moduleManager_->handleRequest(httpRequest_);
+            // create response in struct here
+            this->moduleManager_->handlePreResponse(httpRequest_, httpResponse_);
             asio::async_write(socket_, asio::buffer(httpResponseMaker_.makeStockResponse(HttpResponseMaker::BAD_REQUEST)),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),
                             asio::placeholders::error,
                             asio::placeholders::bytes_transferred));
-            /// API => got an invalid request
-            /*reply_ = reply::stock_reply(reply::bad_request);
-            /// API => response created
-            asio::async_write(socket_, reply_.to_buffers(),
-                boost::bind(&connection::handle_write, shared_from_this(),
-                  asio::placeholders::error));*/
-            /// API => response sent to client
+            this->moduleManager_->handlePostResponse(httpRequest_, httpResponse_);
         } else {
             socket_.async_read_some(asio::buffer(buffer_),
                 boost::bind(&TcpConnection::handle_read, shared_from_this(),
@@ -99,6 +94,7 @@ void TcpConnection::writeData() {
                         asio::placeholders::bytes_transferred));
 }
 
-TcpConnection::TcpConnection(asio::io_service &io_service, VirtualHostManager *vhostsConfig) : socket_(io_service), virtualHostsConfig_(vhostsConfig) {
+TcpConnection::TcpConnection(asio::io_service &io_service, VirtualHostManager *vhostsConfig,
+                             ModuleManager *moduleManager) : socket_(io_service), virtualHostsConfig_(vhostsConfig), moduleManager_(moduleManager) {
     this->inputBuffer_ = (char*)malloc(this->maxPacketLen);
 }

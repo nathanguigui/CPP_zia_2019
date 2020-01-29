@@ -10,10 +10,11 @@
 #include <boost/bind.hpp>
 #include <boost/array.hpp>
 #include <core/HttpParser/HttpDeserialyzer.hpp>
-#include <core/HttpParser/HttpRequest.hpp>
+#include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
 #include <core/HttpResponseMaker/HttpResponseMaker.hpp>
 #include <core/VirtualHostsConfig/VirtualHostsConfig.hpp>
 #include <core/VirtualHostManager/VirtualHostManager.hpp>
+#include "core/ModuleManager/ModuleManager.hpp"
 
 using namespace boost;
 
@@ -21,9 +22,10 @@ class TcpConnection: public boost::enable_shared_from_this<TcpConnection> {
 public:
     typedef boost::shared_ptr<TcpConnection> pointer;
 
-    explicit TcpConnection(asio::io_service &io_service, VirtualHostManager *vhostsConfig);
+    TcpConnection(asio::io_service &io_service, VirtualHostManager *vhostsConfig,
+                           ModuleManager *moduleManager);
 
-    static TcpConnection::pointer create(asio::io_service &io_service, VirtualHostManager *vhostsConfig);
+    static pointer create(asio::io_service &io_service, VirtualHostManager *vhostsConfig, ModuleManager *moduleManager);
 
     boost::asio::ip::tcp::socket& socket();
 
@@ -56,7 +58,11 @@ private:
 
     HttpRequest httpRequest_;
 
+    HttpResponse httpResponse_;
+
     HttpResponseMaker httpResponseMaker_;
+
+    ModuleManager *moduleManager_;
 
     asio::streambuf request_;
 };

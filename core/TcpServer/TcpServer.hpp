@@ -5,16 +5,18 @@
 #ifndef CPP_RTYPE_2019_TCPSERVER_HPP
 #define CPP_RTYPE_2019_TCPSERVER_HPP
 
-#include <core/ServerConfig/ServerConfig.hpp>
-#include <core/VirtualHostsConfig/VirtualHostsConfig.hpp>
-#include <core/VirtualHostManager/VirtualHostManager.hpp>
+#include "core/ServerConfig/ServerConfig.hpp"
+#include "core/VirtualHostsConfig/VirtualHostsConfig.hpp"
+#include "core/VirtualHostManager/VirtualHostManager.hpp"
+#include "core/ModuleManager/ModuleManager.hpp"
 #include "core/TcpHandler/TcpHandler.hpp"
 #include "core/TcpConnection/TcpConnection.hpp"
 
 
 class TcpServer {
 public:
-    explicit TcpServer(boost::asio::io_service &io_service, ServerConfig *config, VirtualHostsConfig *virtualHost);
+    explicit TcpServer(boost::asio::io_service &io_service, ServerConfig *config, VirtualHostsConfig *virtualHost,
+                       ModuleManager *moduleManger);
 private:
     void start_accept();
     void handle_accept(TcpConnection::pointer new_connection, const boost::system::error_code& error);
@@ -24,6 +26,7 @@ private:
     ServerConfig *serverConfig_;
     VirtualHostsConfig *virtualHostsConfig_;
     VirtualHostManager *virtualHostManagers_;
+    ModuleManager *moduleManager_;
 };
 
 #endif //CPP_RTYPE_2019_TCPSERVER_HPP

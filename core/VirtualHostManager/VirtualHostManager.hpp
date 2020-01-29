@@ -7,7 +7,7 @@
 
 
 #include <core/VirtualHostsConfig/VirtualHostsConfig.hpp>
-#include <core/HttpParser/HttpRequest.hpp>
+#include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
 
 class VirtualHostManager {
 public:
