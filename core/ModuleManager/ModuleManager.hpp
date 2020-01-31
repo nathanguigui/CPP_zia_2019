@@ -11,11 +11,11 @@
     #include <dlfcn.h>
 #endif
 
-#include "zia_modules/includes/IModule/IModule.hpp"
 #include <vector>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include "ModuleToolbox.hpp"
 
 class ModuleManager {
 public:
@@ -40,7 +40,10 @@ private:
     std::string modulesPath_;
 
     /// List of all modules
-    std::vector<IModule *> modulesList_;
+    std::vector<ModuleToolbox> modulesList_;
+
+    /// List of all object opened
+    std::vector<void *> libObjectList_;
 };
 
 
