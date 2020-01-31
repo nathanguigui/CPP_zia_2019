@@ -1,6 +1,6 @@
 {
   "hosts": [{
-    "hostname": "localhost",
+    "hostname": "127.0.0.1",
     "host_root": "/home/guigui/",
     "follow_symlinks": true,
     "404_page": null

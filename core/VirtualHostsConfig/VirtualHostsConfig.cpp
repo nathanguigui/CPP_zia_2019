@@ -6,9 +6,10 @@
 
 VirtualHostsConfig::VirtualHostsConfig(std::string path) : hostsConfigPath_(path), configValid_(false), fileCount_(0) {
     fileCount_ = 0;
+    std::cout << "Searching virtual hosts in path: " << path << std::endl;
     for (auto& p: std::filesystem::directory_iterator(hostsConfigPath_)) {
         if (p.path().string().substr(p.path().string().find_last_of('.') + 1) == "json") {
-            std::cout << p.path() << std::endl;
+            std::cout << "Found virtual host config: " << p.path() << std::endl;
             std::ifstream in(p.path());
             Json::Value tmp;
             in >> tmp;
@@ -22,7 +23,7 @@ VirtualHostsConfig::VirtualHostsConfig(std::string path) : hostsConfigPath_(path
 bool VirtualHostsConfig::checkConfigValidity() {
     //std::cout << this->hostsConfig_.toStyledString();
     for (const auto &host: this->hostsConfig_)
-        std::cout << host["host_root"].asString() << std::endl;
+        std::cout << "Serving: " << host["host_root"].asString() << " for hostname: " << host["hostname"].asString() << std::endl;
     return configValid_;
 }
 

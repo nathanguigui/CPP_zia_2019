@@ -13,7 +13,7 @@ class VirtualHostManager {
 public:
     explicit VirtualHostManager(VirtualHostsConfig *virtualHostsConfig);
 
-    std::string access(HttpRequest &httpRequest);
+    std::string access(HttpRequest &httpRequest, std::string hostname);
 
     VirtualHostsConfig *getVirtualHostsConfig() const;
 

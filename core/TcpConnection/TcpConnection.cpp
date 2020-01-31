@@ -49,7 +49,7 @@ void TcpConnection::handle_read(const boost::system::error_code &err, size_t byt
             httpRequest_.valid = true;
             this->moduleManager_->handleRequest(httpRequest_);
             std::string tmp;
-            tmp = httpResponseMaker_.makeSuccessResponse(virtualHostsConfig_->access(httpRequest_), "text/html");
+            tmp = httpResponseMaker_.makeSuccessResponse(virtualHostsConfig_->access(httpRequest_, socket_.remote_endpoint().address().to_string()), "text/html");
             this->moduleManager_->handlePreResponse(httpRequest_, httpResponse_);
             asio::async_write(socket_, asio::buffer(tmp),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),

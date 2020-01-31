@@ -139,10 +139,10 @@ else( MSVC )
 
     add_executable(zia core/main.cpp)
     target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib ModulesZiaLib)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe -ldl")
 
 endif( MSVC )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe")
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
