@@ -35,7 +35,7 @@ void TcpConnection::start() {
 void TcpConnection::handle_write(const boost::system::error_code &error, size_t bytes_transferred) {
     if (!error) {
         boost::system::error_code ignored_ec;
-        socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ignored_ec);
+        //socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ignored_ec);
     } else if (error != boost::asio::error::operation_aborted) {
 
     }
@@ -48,10 +48,14 @@ void TcpConnection::handle_read(const boost::system::error_code &err, size_t byt
         if (result) {
             httpRequest_.valid = true;
             this->moduleManager_->handleRequest(httpRequest_);
-            std::string tmp;
-            tmp = httpResponseMaker_.makeSuccessResponse(virtualHostsConfig_->access(httpRequest_, socket_.remote_endpoint().address().to_string()), "text/html");
+            /*std::string tmp;
+            tmp = httpResponseMaker_.makeSuccessResponse(virtualHostsConfig_->access(httpRequest_, socket_.remote_endpoint().address().to_string()), "text/html");*/
+            httpResponse_.httpMajorVersion = 1;
+            httpResponse_.httpMinorVersion = 0;
+            HttpResponseMaker::addMessageFromCode(httpResponse_, HttpResponseMaker::ResponseCode::SUCCESS);
+            this->virtualHostsConfig_->access(httpRequest_, socket_.remote_endpoint().address().to_string(), httpResponse_);
             this->moduleManager_->handlePreResponse(httpRequest_, httpResponse_);
-            asio::async_write(socket_, asio::buffer(tmp),
+            asio::async_write(socket_, asio::buffer(HttpResponseMaker::serializeHttpResponse(httpResponse_)),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),
                             asio::placeholders::error,
                             asio::placeholders::bytes_transferred));

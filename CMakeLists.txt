@@ -32,7 +32,7 @@ set(HTTP_SRC
         core/HttpParser/HttpDeserialyzer.cpp
         core/HttpParser/HttpDeserialyzer.hpp
         core/HttpResponseMaker/HttpResponseMaker.cpp
-        core/HttpResponseMaker/HttpResponseMaker.hpp)
+        core/HttpResponseMaker/HttpResponseMaker.hpp core/MimeTypes/MimeTypes.cpp core/MimeTypes/MimeTypes.hpp)
 
 
 

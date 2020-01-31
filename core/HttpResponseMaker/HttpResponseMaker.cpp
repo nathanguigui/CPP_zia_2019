@@ -67,3 +67,43 @@ void HttpResponseMaker::addMessageFromCode(std::stringstream &ss, HttpResponseMa
             break;
     }
 }
+
+std::string HttpResponseMaker::serializeHttpResponse(HttpResponse response) {
+    std::stringstream ss;
+    ss << "HTTP/" << response.httpMajorVersion << "." << response.httpMinorVersion << " " << response.responseCode << " " << response.responseMessage <<"\r\n";
+    ss << "Content-Length: " << response.body.size() << "\r\n";
+    HttpResponseMaker::setHeaders(ss, response);
+    ss << "\r\n" << response.body << "\r\n";
+    return ss.str();
+}
+
+void HttpResponseMaker::setHeaders(std::stringstream &ss, HttpResponse &httpResponse) {
+    for (const auto &header: httpResponse.headers)
+        ss << header.name << ": " << header.value << "\r\n";
+}
+
+void HttpResponseMaker::addMessageFromCode(HttpResponse &httpResponse, HttpResponseMaker::ResponseCode responseCode) {
+    httpResponse.responseCode = responseCode;
+    switch (responseCode) {
+        case SUCCESS:
+            httpResponse.responseMessage = "OK";
+            break;
+        case REDIRECT_PERMANENT:
+            break;
+        case REDIRECT_TEMP:
+            break;
+        case BAD_REQUEST:
+            httpResponse.responseMessage = "Bad Request";
+            break;
+        case USER_NOT_AUTH:
+            break;
+        case ACCESS_DENIED:
+            break;
+        case NOT_FOUND:
+            httpResponse.responseMessage = "Not Found";
+            break;
+        case SERVER_ERROR:
+            httpResponse.responseMessage = "Service Unavailable";
+            break;
+    }
+}

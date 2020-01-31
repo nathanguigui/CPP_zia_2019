@@ -32,3 +32,28 @@ std::string VirtualHostManager::access(HttpRequest &httpRequest, std::string hos
     }
     return ("404 not found.");
 }
+
+void VirtualHostManager::access(HttpRequest &httpRequest, std::string hostname, HttpResponse &httpResponse) {
+    auto vhosts = virtualHostsConfig->getHostsConfig();
+    try {
+        if (virtualHostsConfig->hasHostname(hostname)) {
+            for (const auto &host: vhosts) {
+                // TODO check if hostname match
+                try {
+                    std::string path = host["host_root"].asString() + httpRequest.uri;
+                    std::ifstream file(path);
+                    std::stringstream ss;
+                    ss << file.rdbuf() << std::endl;
+                    httpResponse.body = ss.str();
+                    httpResponse.headers.push_back({"Content-Type", extensionToMime(path.substr(path.find_last_of('.') + 1))});
+                    return;
+                } catch (std::exception &e) {
+                    continue;
+                }
+            }
+        }
+    } catch (std::exception &e) {
+        httpResponse.body = "404 not found.";
+    }
+    httpResponse.body = "404 not found.";
+}

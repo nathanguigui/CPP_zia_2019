@@ -36,11 +36,19 @@ public:
 
     void clearHeaders();
 
+    static std::string serializeHttpResponse(HttpResponse response);
+
+    static void addMessageFromCode(HttpResponse &httpResponse, HttpResponseMaker::ResponseCode responseCode);
+
+    static void setHeaders(std::stringstream &ss, HttpResponse &httpResponse);
+
 private:
 
     void setHeaders(std::stringstream &ss);
 
+
     void addMessageFromCode(std::stringstream &ss, HttpResponseMaker::ResponseCode code);
+
 
     int httpMajorVersion_;
     int httpMinorVersion_;

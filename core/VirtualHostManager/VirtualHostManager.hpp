@@ -7,13 +7,17 @@
 
 
 #include <core/VirtualHostsConfig/VirtualHostsConfig.hpp>
+#include <zia_modules/includes/HttpResponse/HttpResponse.hpp>
 #include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
+#include "core/MimeTypes/MimeTypes.hpp"
 
 class VirtualHostManager {
 public:
     explicit VirtualHostManager(VirtualHostsConfig *virtualHostsConfig);
 
     std::string access(HttpRequest &httpRequest, std::string hostname);
+
+    void access(HttpRequest &httpRequest, std::string hostname, HttpResponse &httpResponse);
 
     VirtualHostsConfig *getVirtualHostsConfig() const;
 
