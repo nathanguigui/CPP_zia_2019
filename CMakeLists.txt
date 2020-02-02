@@ -8,149 +8,118 @@ include(${CMAKE_SOURCE_DIR}/build/conanbuildinfo.cmake)
 conan_basic_setup()
 
 
-
-
-
 ###########
 # TCP LIB #
 ###########
 set(TCP_SRC
-        core/TcpServer/TcpServer.cpp
-        core/TcpServer/TcpServer.hpp
-        core/TcpConnection/TcpConnection.cpp
-        core/TcpConnection/TcpConnection.hpp
-        core/TcpHandler/TcpHandler.cpp
-        core/TcpHandler/TcpHandler.hpp
-        core/TlsTcpServer/TlsTcpServer.cpp core/TlsTcpServer/TlsTcpServer.hpp core/TlsTcpConnection/TlsTcpConnection.cpp core/TlsTcpConnection/TlsTcpConnection.hpp core/ITcpServer/ITcpServer.hpp)
-
-
+        src/core/TcpServer/TcpServer.cpp
+        src/core/TcpServer/TcpServer.hpp
+        src/core/TcpConnection/TcpConnection.cpp
+        src/core/TcpConnection/TcpConnection.hpp
+        src/core/TcpHandler/TcpHandler.cpp
+        src/core/TcpHandler/TcpHandler.hpp
+        src/core/TlsTcpServer/TlsTcpServer.cpp
+        src/core/TlsTcpServer/TlsTcpServer.hpp
+        src/core/TlsTcpConnection/TlsTcpConnection.cpp
+        src/core/TlsTcpConnection/TlsTcpConnection.hpp
+        src/core/ITcpServer/ITcpServer.hpp)
 
 ############
 # HTTP LIB #
 ############
 set(HTTP_SRC
-        core/HttpParser/HttpDeserialyzer.cpp
-        core/HttpParser/HttpDeserialyzer.hpp
-        core/HttpResponseMaker/HttpResponseMaker.cpp
-        core/HttpResponseMaker/HttpResponseMaker.hpp)
-
-
+        src/core/HttpParser/HttpDeserialyzer.cpp
+        src/core/HttpParser/HttpDeserialyzer.hpp
+        src/core/HttpResponseMaker/HttpResponseMaker.cpp
+        src/core/HttpResponseMaker/HttpResponseMaker.hpp)
 
 ##############
 # CONFIG LIB #
 ##############
 set(CONFIG_SRC
-        core/ServerConfig/ServerConfig.cpp
-        core/ServerConfig/ServerConfig.hpp
-        core/VirtualHostsConfig/VirtualHostsConfig.cpp
-        core/VirtualHostsConfig/VirtualHostsConfig.hpp
-        core/VirtualHostManager/VirtualHostManager.cpp
-        core/VirtualHostManager/VirtualHostManager.hpp)
-
-
+        src/core/ServerConfig/ServerConfig.cpp
+        src/core/ServerConfig/ServerConfig.hpp
+        src/core/VirtualHostsConfig/VirtualHostsConfig.cpp
+        src/core/VirtualHostsConfig/VirtualHostsConfig.hpp
+        src/core/VirtualHostManager/VirtualHostManager.cpp
+        src/core/VirtualHostManager/VirtualHostManager.hpp)
 
 #############
 # VHOST LIB #
 #############
 set(VHOST_SRC
-        core/VirtualHostManager/VirtualHostManager.cpp
-        core/VirtualHostManager/VirtualHostManager.hpp)
-
-
+        src/core/VirtualHostManager/VirtualHostManager.cpp
+        src/core/VirtualHostManager/VirtualHostManager.hpp)
 
 ###############
 # MODULES LIB #
 ###############
 set(MODULES_LIB
-        core/ModuleManager/ModuleManager.cpp
-        core/ModuleManager/ModuleManager.hpp
-        zia_modules/includes/IModule/IModule.hpp)
-
-
+        src/core/ModuleManager/ModuleManager.cpp
+        src/core/ModuleManager/ModuleManager.hpp
+        src/zia_modules/includes/IModule/IModule.hpp)
 
 ############
 # ZIA CORE #
 ############
 set(CORE_SRC
-        core/ZiaCore/ZiaCore.cpp
-        core/ZiaCore/ZiaCore.hpp
-        core/ZiaCore/ZiaArgs.hpp
-        core/ZiaCore/ZiaVersion.hpp)
-
+        src/core/ZiaCore/ZiaCore.cpp
+        src/core/ZiaCore/ZiaCore.hpp
+        src/core/ZiaCore/ZiaArgs.hpp
+        src/core/ZiaCore/ZiaVersion.hpp)
 
 
 ##############
 # LOG MODULE #
 ##############
 set(LOG_MODULE_SRC
-        zia_modules/example/LogModule/LogModule.cpp
-        zia_modules/example/LogModule/LogModule.hpp
+        src/zia_modules/example/LogModule/LogModule.cpp
+        src/zia_modules/example/LogModule/LogModule.hpp
         )
 
+##############
+# SSL MODULE #
+##############
+set(SSL_MODULE_SRC
+
+        src/modules/SslModule/SslModule.cpp src/modules/SslModule/SslModule.hpp)
 
 if ( MSVC )
 
-
-
-    ADD_LIBRARY(TcpZiaLib STATIC ${TCP_SRC})
-    TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(HttpZiaLib STATIC ${HTTP_SRC})
-    TARGET_LINK_LIBRARIES(HttpZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(ConfigZiaLib STATIC ${CONFIG_SRC})
-    TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(VhostZiaLib STATIC ${VHOST_SRC})
-    TARGET_LINK_LIBRARIES(VhostZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(ZiaCore STATIC ${CORE_SRC})
-    TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
-
-    add_executable(zia core/main.cpp)
-    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib)
-
-
-    #add_executable(zia ${CORE_SRC} ${CONFIG_SRC} ${HTTP_SRC} ${TCP_SRC})
-    #target_link_libraries(zia ${CONAN_LIBS})
-
 else( MSVC )
 
-    ADD_LIBRARY(TcpZiaLib ${TCP_SRC})
-    TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(HttpZiaLib ${HTTP_SRC})
-    TARGET_LINK_LIBRARIES(HttpZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(ConfigZiaLib ${CONFIG_SRC})
-    TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(VhostZiaLib ${VHOST_SRC})
-    TARGET_LINK_LIBRARIES(VhostZiaLib ${CONAN_LIBS})
-
-    ADD_LIBRARY(ZiaCore ${CORE_SRC})
-    TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
-
-    ADD_LIBRARY(ModulesZiaLib ${MODULES_LIB})
-    TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
-
-
-    ADD_LIBRARY(LogModule SHARED ${LOG_MODULE_SRC})
-
-    add_executable(zia core/main.cpp core/MimeTypes/MimeTypes.cpp core/MimeTypes/MimeTypes.hpp)
-    target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib ModulesZiaLib)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe -ldl -lcrypto -lssl")
-
 endif( MSVC )
 
+ADD_LIBRARY(TcpZiaLib STATIC ${TCP_SRC})
+TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
+
+ADD_LIBRARY(HttpZiaLib STATIC ${HTTP_SRC})
+TARGET_LINK_LIBRARIES(HttpZiaLib ${CONAN_LIBS})
+
+ADD_LIBRARY(ConfigZiaLib STATIC ${CONFIG_SRC})
+TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
+
+ADD_LIBRARY(VhostZiaLib STATIC ${VHOST_SRC})
+TARGET_LINK_LIBRARIES(VhostZiaLib ${CONAN_LIBS})
+
+ADD_LIBRARY(ZiaCore STATIC ${CORE_SRC})
+TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
+
+ADD_LIBRARY(ModulesZiaLib STATIC ${MODULES_LIB})
+TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
+
+
+ADD_LIBRARY(LogModule SHARED ${LOG_MODULE_SRC})
+ADD_LIBRARY(SslModule SHARED ${SSL_MODULE_SRC})
+
+add_executable(zia src/core/main.cpp src/core/MimeTypes/MimeTypes.cpp src/core/MimeTypes/MimeTypes.hpp)
+target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib ModulesZiaLib)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
-
-
-
 
 ########
 # COPY #
