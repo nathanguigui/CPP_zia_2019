@@ -2,10 +2,7 @@
 // Created by guigui on 1/24/20.
 //
 
-#include <iostream>
-#include <core/ServerConfig/ServerConfig.hpp>
 #include "ZiaCore.hpp"
-#include "ZiaVersion.hpp"
 
 ZiaCore::ZiaCore() {
 }
@@ -68,12 +65,29 @@ void ZiaCore::startZia() {
 }
 
 void ZiaCore::startServer() {
-    try {
+    this->serverInstances_.push_back({25565, false, "", "", ""});
+    this->virtualHostManager_ = new VirtualHostManager(this->virtualHostsConfig_);
+    for (const auto &instance: this->serverInstances_) {
+        ZiaInstances newInstance;
+        try {
+            if (!instance.useTls) {
+                std::cout << "creating server" << std::endl;
+                newInstance.tcpServer = new TcpServer(newInstance.ioService, serverConfig_, virtualHostsConfig_, moduleManager_);
+                newInstance.ioService.run();
+            } else {
+                newInstance.tcpServer = new TlsTcpServer(newInstance.ioContext, this->virtualHostManager_, this->moduleManager_);
+                newInstance.ioContext.run();
+            }
+        } catch (std::exception &e) {
+            std::cerr << e.what() << std::endl;
+        }
+    }
+    /*try {
         httpServer_ = new TcpServer(ioService_, serverConfig_, virtualHostsConfig_, moduleManager_);
         ioService_.run();
     } catch (std::exception& e) {
         std::cerr << e.what() << std::endl;
-    }
+    }*/
 }
 
 void ZiaCore::printVersion() {

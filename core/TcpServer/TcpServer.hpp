@@ -5,6 +5,7 @@
 #ifndef CPP_RTYPE_2019_TCPSERVER_HPP
 #define CPP_RTYPE_2019_TCPSERVER_HPP
 
+#include "core/ITcpServer/ITcpServer.hpp"
 #include "core/ServerConfig/ServerConfig.hpp"
 #include "core/VirtualHostsConfig/VirtualHostsConfig.hpp"
 #include "core/VirtualHostManager/VirtualHostManager.hpp"
@@ -13,9 +14,9 @@
 #include "core/TcpConnection/TcpConnection.hpp"
 
 
-class TcpServer {
+class TcpServer : public ITcpServer {
 public:
-    explicit TcpServer(boost::asio::io_service &io_service, ServerConfig *config, VirtualHostsConfig *virtualHost,
+    TcpServer(boost::asio::io_service &io_service, ServerConfig *config, VirtualHostsConfig *virtualHost,
                        ModuleManager *moduleManger);
 private:
     void start_accept();

@@ -18,6 +18,11 @@
 #include "core/VirtualHostsConfig/VirtualHostsConfig.hpp"
 #include "core/ModuleManager/ModuleManager.hpp"
 #include "ZiaArgs.hpp"
+#include "ZiaInstances.hpp"
+#include <iostream>
+#include <core/ServerConfig/ServerConfig.hpp>
+#include <core/TlsTcpServer/TlsTcpServer.hpp>
+#include "ZiaVersion.hpp"
 
 class ZiaCore {
 public:
@@ -39,6 +44,13 @@ private:
     VirtualHostsConfig *virtualHostsConfig_;
     ModuleManager *moduleManager_;
     ZiaArgs argsProps_{"./config/server.json", false, false};
+
+    std::vector<ServerInstanceConfig> serverInstances_;
+
+    std::vector<ZiaInstances> ziaInstances_;
+
+    VirtualHostManager *virtualHostManager_;
+
     //TcpServer sslServer_;
 };
 

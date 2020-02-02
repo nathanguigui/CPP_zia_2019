@@ -21,7 +21,7 @@ set(TCP_SRC
         core/TcpConnection/TcpConnection.hpp
         core/TcpHandler/TcpHandler.cpp
         core/TcpHandler/TcpHandler.hpp
-)
+        core/TlsTcpServer/TlsTcpServer.cpp core/TlsTcpServer/TlsTcpServer.hpp core/TlsTcpConnection/TlsTcpConnection.cpp core/TlsTcpConnection/TlsTcpConnection.hpp core/ITcpServer/ITcpServer.hpp)
 
 
 
@@ -32,7 +32,7 @@ set(HTTP_SRC
         core/HttpParser/HttpDeserialyzer.cpp
         core/HttpParser/HttpDeserialyzer.hpp
         core/HttpResponseMaker/HttpResponseMaker.cpp
-        core/HttpResponseMaker/HttpResponseMaker.hpp core/MimeTypes/MimeTypes.cpp core/MimeTypes/MimeTypes.hpp)
+        core/HttpResponseMaker/HttpResponseMaker.hpp)
 
 
 
@@ -137,9 +137,9 @@ else( MSVC )
 
     ADD_LIBRARY(LogModule SHARED ${LOG_MODULE_SRC})
 
-    add_executable(zia core/main.cpp)
+    add_executable(zia core/main.cpp core/MimeTypes/MimeTypes.cpp core/MimeTypes/MimeTypes.hpp)
     target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib ModulesZiaLib)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe -ldl")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe -ldl -lcrypto -lssl")
 
 endif( MSVC )
 
