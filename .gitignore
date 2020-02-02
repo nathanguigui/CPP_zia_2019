@@ -3,3 +3,4 @@ zia
 cmake-build-debug
 config/mod-available
 config/mod-enabled
+.idea/ 
