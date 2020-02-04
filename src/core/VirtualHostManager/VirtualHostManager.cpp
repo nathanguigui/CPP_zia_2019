@@ -44,6 +44,7 @@ void VirtualHostManager::access(HttpRequest &httpRequest, std::string hostname, 
                     std::ifstream file(path);
                     std::stringstream ss;
                     ss << file.rdbuf() << std::endl;
+                    httpResponse.filePath = path;
                     httpResponse.body = ss.str();
                     httpResponse.headers.push_back({"Content-Type", extensionToMime(path.substr(path.find_last_of('.') + 1))});
                     return;

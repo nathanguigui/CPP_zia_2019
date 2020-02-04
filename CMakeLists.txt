@@ -81,8 +81,14 @@ set(LOG_MODULE_SRC
 # SSL MODULE #
 ##############
 set(SSL_MODULE_SRC
-
         src/modules/SslModule/SslModule.cpp src/modules/SslModule/SslModule.hpp)
+
+##############
+# PHP MODULE #
+##############
+set(PHP_MODULE_SRC
+        src/modules/PhpModule/PhpModule.cpp
+        src/modules/PhpModule/PhpModule.hpp)
 
 if ( MSVC )
 
@@ -112,6 +118,7 @@ TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
 
 ADD_LIBRARY(LogModule SHARED ${LOG_MODULE_SRC})
 ADD_LIBRARY(SslModule SHARED ${SSL_MODULE_SRC})
+ADD_LIBRARY(PhplModule SHARED ${PHP_MODULE_SRC})
 
 add_executable(zia src/core/main.cpp src/core/MimeTypes/MimeTypes.cpp src/core/MimeTypes/MimeTypes.hpp)
 target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib ModulesZiaLib)
