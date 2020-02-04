@@ -5,8 +5,8 @@
 #ifndef CPP_RTYPE_2019_HTTPRESPONSEMAKER_HPP
 #define CPP_RTYPE_2019_HTTPRESPONSEMAKER_HPP
 
-#include "src/zia_modules/includes/HttpRequest/HttpRequest.hpp"
-#include "src/zia_modules/includes/IModule/IModule.hpp"
+#include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
+#include "zia_modules/includes/IModule/IModule.hpp"
 #include <vector>
 #include <sstream>
 

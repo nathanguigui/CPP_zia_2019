@@ -10,7 +10,7 @@
 #include <boost/bind.hpp>
 #include <boost/array.hpp>
 #include <src/core/HttpParser/HttpDeserialyzer.hpp>
-#include "src/zia_modules/includes/HttpRequest/HttpRequest.hpp"
+#include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
 #include <src/core/HttpResponseMaker/HttpResponseMaker.hpp>
 #include <src/core/VirtualHostsConfig/VirtualHostsConfig.hpp>
 #include <src/core/VirtualHostManager/VirtualHostManager.hpp>

@@ -5,7 +5,7 @@
 #ifndef CPP_ZIA_2019_MODULETOOLBOX_HPP
 #define CPP_ZIA_2019_MODULETOOLBOX_HPP
 
-#include "src/zia_modules/includes/IModule/IModule.hpp"
+#include "zia_modules/includes/IModule/IModule.hpp"
 
 struct ModuleToolbox {
     IModule *module;

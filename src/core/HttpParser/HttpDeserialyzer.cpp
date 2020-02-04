@@ -3,7 +3,7 @@
 //
 
 #include "HttpDeserialyzer.hpp"
-#include "src/zia_modules/includes/HttpRequest/HttpRequest.hpp"
+#include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
 
 HttpDeserialyzer::HttpDeserialyzer(): state_(MethodStart) {}
 

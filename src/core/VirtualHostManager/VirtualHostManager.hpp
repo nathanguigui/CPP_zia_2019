@@ -7,8 +7,8 @@
 
 
 #include <src/core/VirtualHostsConfig/VirtualHostsConfig.hpp>
-#include <src/zia_modules/includes/HttpResponse/HttpResponse.hpp>
-#include "src/zia_modules/includes/HttpRequest/HttpRequest.hpp"
+#include <zia_modules/includes/HttpResponse/HttpResponse.hpp>
+#include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
 #include "src/core/MimeTypes/MimeTypes.hpp"
 
 class VirtualHostManager {

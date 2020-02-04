@@ -11,7 +11,7 @@
     #include <cstdio>
 #endif
 
-#include "src/zia_modules/includes/IModule/IModule.hpp"
+#include "zia_modules/includes/IModule/IModule.hpp"
 #include <array>
 #include <memory>
 
