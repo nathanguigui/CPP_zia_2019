@@ -1,6 +1,6 @@
 {
   "hosts": [{
-    "hostname": "10.109.XX.XX",
+    "hostname": "10.109.250.136",
     "host_root": "/home/guigui/epitech",
     "follow_symlinks": true,
     "404_page": null

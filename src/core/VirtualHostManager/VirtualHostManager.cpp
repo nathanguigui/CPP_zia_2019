@@ -21,6 +21,7 @@ std::string VirtualHostManager::access(HttpRequest &httpRequest, std::string hos
                     std::ifstream file(path);
                     std::stringstream ss;
                     ss << file.rdbuf();
+                    ss << host["host_root"].asString();
                     return ss.str();
                 } catch (std::exception &e) {
                     continue;
@@ -38,18 +39,19 @@ void VirtualHostManager::access(HttpRequest &httpRequest, std::string hostname, 
     try {
         if (virtualHostsConfig->hasHostname(hostname)) {
             for (const auto &host: vhosts) {
-                // TODO check if hostname match
-                try {
-                    std::string path = host["host_root"].asString() + httpRequest.uri;
-                    std::ifstream file(path);
-                    std::stringstream ss;
-                    ss << file.rdbuf() << std::endl;
-                    httpResponse.filePath = path;
-                    httpResponse.body = ss.str();
-                    httpResponse.headers.push_back({"Content-Type", extensionToMime(path.substr(path.find_last_of('.') + 1))});
-                    return;
-                } catch (std::exception &e) {
-                    continue;
+                if (host["hostname"].asString() == hostname){
+                    try {
+                        std::string path = host["host_root"].asString() + httpRequest.uri;
+                        std::ifstream file(path);
+                        std::stringstream ss;
+                        ss << file.rdbuf() << std::endl;
+                        httpResponse.filePath = path;
+                        httpResponse.body = ss.str();
+                        httpResponse.headers.push_back({"Content-Type", extensionToMime(path.substr(path.find_last_of('.') + 1))});
+                        return;
+                    } catch (std::exception &e) {
+                        continue;
+                    }
                 }
             }
         }
