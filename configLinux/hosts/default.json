@@ -1,7 +1,7 @@
 {
   "hosts": [{
     "hostname": "127.0.0.1",
-    "host_root": "C:\\Users\\natha",
+    "host_root": "/home/guigui/",
     "follow_symlinks": true,
     "404_page": null
   }]
