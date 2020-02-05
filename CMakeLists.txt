@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.1.0)
 
 project(CPP_zia_2019)
 
-add_definitions("-std=c++17")
-
 include(${CMAKE_SOURCE_DIR}/build/conanbuildinfo.cmake)
 conan_basic_setup()
 
@@ -91,37 +89,53 @@ set(PHP_MODULE_SRC
         src/modules/PhpModule/PhpModule.hpp)
 
 if ( MSVC )
-
+    if (MSVC_VERSION GREATER_EQUAL "1900")
+        include(CheckCXXCompilerFlag)
+        CHECK_CXX_COMPILER_FLAG("/std:c++latest" _cpp_latest_flag_supported)
+        if (_cpp_latest_flag_supported)
+            add_compile_options("/std:c++latest")
+        endif()
+    endif()
 else( MSVC )
-
+    add_definitions("-std=c++17")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe -ldl -lcrypto -lssl")
 endif( MSVC )
 
 ADD_LIBRARY(TcpZiaLib STATIC ${TCP_SRC})
 TARGET_LINK_LIBRARIES(TcpZiaLib ${CONAN_LIBS})
+set_property(TARGET TcpZiaLib PROPERTY CXX_STANDARD 17)
 
 ADD_LIBRARY(HttpZiaLib STATIC ${HTTP_SRC})
 TARGET_LINK_LIBRARIES(HttpZiaLib ${CONAN_LIBS})
+SET_PROPERTY(TARGET HttpZiaLib PROPERTY CXX_STANDARD 17)
 
 ADD_LIBRARY(ConfigZiaLib STATIC ${CONFIG_SRC})
 TARGET_LINK_LIBRARIES(ConfigZiaLib ${CONAN_LIBS})
+SET_PROPERTY(TARGET ConfigZiaLib PROPERTY CXX_STANDARD 17)
 
 ADD_LIBRARY(VhostZiaLib STATIC ${VHOST_SRC})
 TARGET_LINK_LIBRARIES(VhostZiaLib ${CONAN_LIBS})
+SET_PROPERTY(TARGET VhostZiaLib PROPERTY CXX_STANDARD 17)
 
 ADD_LIBRARY(ZiaCore STATIC ${CORE_SRC})
 TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
+SET_PROPERTY(TARGET ZiaCore PROPERTY CXX_STANDARD 17)
 
 ADD_LIBRARY(ModulesZiaLib STATIC ${MODULES_LIB})
 TARGET_LINK_LIBRARIES(ZiaCore ${CONAN_LIBS})
+SET_PROPERTY(TARGET ZiaCore PROPERTY CXX_STANDARD 17)
 
 
 ADD_LIBRARY(LogModule SHARED ${LOG_MODULE_SRC})
+SET_PROPERTY(TARGET LogModule PROPERTY CXX_STANDARD 17)
 ADD_LIBRARY(SslModule SHARED ${SSL_MODULE_SRC})
-ADD_LIBRARY(PhplModule SHARED ${PHP_MODULE_SRC})
+SET_PROPERTY(TARGET SslModule PROPERTY CXX_STANDARD 17)
+ADD_LIBRARY(PhpModule SHARED ${PHP_MODULE_SRC})
+SET_PROPERTY(TARGET PhpModule PROPERTY CXX_STANDARD 17)
 
 add_executable(zia src/core/main.cpp src/core/MimeTypes/MimeTypes.cpp src/core/MimeTypes/MimeTypes.hpp)
 target_link_libraries(zia ${CONAN_LIBS} ZiaCore TcpZiaLib HttpZiaLib ConfigZiaLib VhostZiaLib ModulesZiaLib)
+SET_PROPERTY(TARGET zia PROPERTY CXX_STANDARD 17)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -132,19 +146,44 @@ include_directories(
 ########
 # COPY #
 ########
-add_custom_command(TARGET zia
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/build/bin/
-        ${CMAKE_BINARY_DIR}/../
-        COMMENT "Compilation done, executable copied."
-)
 
-add_custom_command(TARGET LogModule
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/build/lib/*.so
-        ${CMAKE_BINARY_DIR}/../config/mod-available/
-        COMMENT "Modules compiled and copied to default mod-available folder."
+if ( MSVC )
+    add_custom_target(CopyModules ALL
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/bin/PhpModule.dll
+            ${CMAKE_BINARY_DIR}/../config/mod-available/
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/bin/LogModule.dll
+            ${CMAKE_BINARY_DIR}/../config/mod-available/
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/bin/SslModule.dll
+            ${CMAKE_BINARY_DIR}/../config/mod-available/
+            COMMENT "Modules compiled and copied to default mod-available folder."
+            )
+    
+    add_custom_command(TARGET zia
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/bin/zia.exe
+            ${CMAKE_BINARY_DIR}/../
+            COMMENT "Compilation done, executable copied."
         )
+else ( MSVC )
+    add_custom_target(CopyModules ALL
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/lib/*.so
+            ${CMAKE_BINARY_DIR}/../config/mod-available/
+            COMMENT "Modules compiled and copied to default mod-available folder."
+            )
+    
+    add_custom_command(TARGET zia
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/bin/zia
+            ${CMAKE_BINARY_DIR}/../
+            COMMENT "Compilation done, executable copied."
+        )
+endif ( MSVC )
+
+add_dependencies(CopyModules LogModule PhpModule SslModule)
 
 message("
 

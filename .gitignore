@@ -5,3 +5,7 @@ config/mod-available
 config/mod-enabled
 .idea/ 
 /doc/
+
+*.dll 
+
+*.exe 

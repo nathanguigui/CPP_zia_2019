@@ -38,6 +38,6 @@ void TlsTcpConnection::handle_read(const boost::system::error_code &err, size_t 
     // TODO read data
 }
 
-TlsTcpConnection::pointer TlsTcpConnection::create(asio::ssl::context &context, asio::ip::tcp::socket socket) {
+//TlsTcpConnection::pointer TlsTcpConnection::create(asio::ssl::context &context, asio::ip::tcp::socket socket) {
     //return TlsTcpConnection::pointer(new TlsTcpConnection(context, socket));
-}
+//}

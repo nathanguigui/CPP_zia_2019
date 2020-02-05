@@ -21,7 +21,7 @@ public:
 
     TlsTcpConnection(boost::asio::ssl::context &context, boost::asio::ip::tcp::socket socket);
 
-    static pointer create(asio::ssl::context &context, asio::ip::tcp::socket socket);
+    //static pointer create(asio::ssl::context &context, asio::ip::tcp::socket socket);
 
     void start();
 

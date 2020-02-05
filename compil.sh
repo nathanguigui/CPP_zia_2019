@@ -4,7 +4,7 @@ if [ $# -eq 2 ]; then
   mkdir build
 fi
 cd build
-conan install ..
+conan install --build=missing ..
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   cmake ..
 elif [[ "$OSTYPE" == "cygwin" ]]; then
