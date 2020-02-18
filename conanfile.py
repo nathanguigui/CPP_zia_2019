@@ -9,7 +9,7 @@ class CPP_zia(ConanFile):
     generators = "cmake", "visual_studio"
 
     def build_requirements(self):
-        if self.settings.os == "Windows":
+        if self.settings.os == "Windows" or self.settings.os == "Macos":
             self.build_requires("OpenSSL/1.1.1@conan/stable")
 
     def build(self):
