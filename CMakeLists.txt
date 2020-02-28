@@ -147,6 +147,24 @@ include_directories(
 # COPY #
 ########
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+    add_custom_target(CopyModules ALL
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/lib/*.dylib
+            ${CMAKE_BINARY_DIR}/../config/mod-available/
+            COMMENT "Modules compiled and copied to default mod-available folder."
+            )
+    
+    add_custom_command(TARGET zia
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/build/bin/zia
+            ${CMAKE_BINARY_DIR}/../
+            COMMENT "Compilation done, executable copied."
+        )
+
+else (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 if ( MSVC )
     add_custom_target(CopyModules ALL
             COMMAND ${CMAKE_COMMAND} -E copy
@@ -182,6 +200,9 @@ else ( MSVC )
             COMMENT "Compilation done, executable copied."
         )
 endif ( MSVC )
+
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
+
 
 add_dependencies(CopyModules LogModule PhpModule SslModule)
 

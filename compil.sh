@@ -6,6 +6,9 @@ fi
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   rm -rf config
   cp -R configLinux config
+elif [[ "$OSTYPE" == "darwin19" ]]; then
+  rm -rf config
+  cp -R configLinux config
 else
   rm -rf config
   cp -R configWindows config
@@ -18,6 +21,8 @@ elif [[ "$OSTYPE" == "cygwin" ]]; then
   cmake -G  "Visual Studio 16 2019" ..
 elif [[ "$OSTYPE" == "win32" ]]; then
   cmake -G  "Visual Studio 16 2019" ..
+elif [[ "$OSTYPE" == "darwin19" ]]; then
+  cmake -G "Xcode" ..
 else
   cmake -G  "Visual Studio 16 2019" ..
 fi
