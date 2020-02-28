@@ -36,18 +36,24 @@ public:
     void startZia();
 
 private:
+
     void startServer();
+
     static void printVersion();
-    TcpServer *httpServer_{};
+
     boost::asio::io_service ioService_;
+
     ServerConfig *serverConfig_;
+
     VirtualHostsConfig *virtualHostsConfig_;
+
     ModuleManager *moduleManager_;
+
     ZiaArgs argsProps_{"./config/server.json", false, false};
 
     std::vector<ServerInstanceConfig> serverInstances_;
 
-    std::vector<ZiaInstances> ziaInstances_;
+    std::vector<ITcpServer*> serverBlocks_;
 
     VirtualHostManager *virtualHostManager_;
 

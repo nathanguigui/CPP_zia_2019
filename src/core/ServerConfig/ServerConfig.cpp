@@ -6,12 +6,15 @@
 #include "ServerConfig.hpp"
 
 ServerConfig::ServerConfig(std::string &serverConfigPath) : serverConfigPath_(serverConfigPath), configValid_(false) {
-    std::ifstream in(serverConfigPath);
     try {
+        std::ifstream in(serverConfigPath);
         in >> this->serverConfig_;
         this->checkConfigValidity();
     } catch (Json::RuntimeError &e) {
         std::cout << "Config file not found." << std::endl;
+        std::cout << "Using default values." << std::endl;
+        defaultHttpPort_ = 25565;
+        useDefaultConfig_ = true;
     }
 
 }
@@ -55,4 +58,8 @@ const std::string &ServerConfig::getHostsPath() const {
 
 const std::string &ServerConfig::getModulesEnabledPath() const {
     return modulesEnabledPath_;
+}
+
+bool ServerConfig::isUseDefaultConfig() const {
+    return useDefaultConfig_;
 }

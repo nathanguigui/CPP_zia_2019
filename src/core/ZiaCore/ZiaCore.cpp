@@ -55,9 +55,14 @@ void ZiaCore::startZia() {
         ZiaCore::printVersion();
     else {
         serverConfig_ = new ServerConfig(argsProps_.configPath);
-        moduleManager_ = new ModuleManager(serverConfig_->getModulesEnabledPath());
-        if (serverConfig_->isConfigValid()) {
+        if (!serverConfig_->isConfigValid()) {
+
+        } else {
+            moduleManager_ = new ModuleManager(serverConfig_->getModulesEnabledPath());
             virtualHostsConfig_ = new VirtualHostsConfig(serverConfig_->getHostsPath());
+
+        }
+        if (serverConfig_->isConfigValid()) {
             if (!argsProps_.checkOnly)
                 this->startServer();
         }
@@ -65,29 +70,28 @@ void ZiaCore::startZia() {
 }
 
 void ZiaCore::startServer() {
-    this->serverInstances_.push_back({25565, false, "", "", ""});
     this->virtualHostManager_ = new VirtualHostManager(this->virtualHostsConfig_);
+    this->moduleManager_->handlePreStart(this->serverInstances_);
+    this->serverInstances_.push_back({25565, false, "", "", ""});
     for (const auto &instance: this->serverInstances_) {
-        ZiaInstances newInstance;
-        try {
+        std::cout << instance.useTls << " " << instance.port << std::endl;
+        //try {
             if (!instance.useTls) {
                 std::cout << "creating server" << std::endl;
-                newInstance.tcpServer = new TcpServer(newInstance.ioService, serverConfig_, virtualHostsConfig_, moduleManager_);
-                newInstance.ioService.run();
+                auto newServer = new TcpServer(ioService_, serverConfig_, virtualHostsConfig_, moduleManager_);
+                this->serverBlocks_.push_back(newServer);
             } else {
-                newInstance.tcpServer = new TlsTcpServer(newInstance.ioContext, this->virtualHostManager_, this->moduleManager_);
-                newInstance.ioContext.run();
+                std::cout << "creating tls server" << std::endl;
+                auto newServer = new TlsTcpServer(ioService_, virtualHostManager_, moduleManager_);
+                this->serverBlocks_.push_back(newServer);
             }
-        } catch (std::exception &e) {
+            //ziaInstances_.push_back(newInstance);
+        /*} catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
-        }
+            std::cout << "exception happended" << std::endl;
+        }*/
     }
-    /*try {
-        httpServer_ = new TcpServer(ioService_, serverConfig_, virtualHostsConfig_, moduleManager_);
-        ioService_.run();
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
-    }*/
+    ioService_.run();
 }
 
 void ZiaCore::printVersion() {

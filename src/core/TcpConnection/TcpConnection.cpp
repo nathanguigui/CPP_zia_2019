@@ -2,9 +2,6 @@
 // Created by guigui on 1/18/20.
 //
 
-#include <iostream>
-#include <src/core/VirtualHostManager/VirtualHostManager.hpp>
-#include <src/core/ModuleManager/ModuleManager.hpp>
 #include "TcpConnection.hpp"
 
 std::string convertToString(char* a) {

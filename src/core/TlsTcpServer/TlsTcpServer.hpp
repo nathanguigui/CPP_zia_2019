@@ -7,17 +7,24 @@
 
 #include "src/core/ITcpServer/ITcpServer.hpp"
 #include "src/core/TlsTcpConnection/TlsTcpConnection.hpp"
+#include <src/core/VirtualHostManager/VirtualHostManager.hpp>
+#include <src/core/ModuleManager/ModuleManager.hpp>
 
 class TlsTcpServer : public ITcpServer {
 public:
-    TlsTcpServer(boost::asio::io_context &ioContext, VirtualHostManager *virtualHostManager,
+    TlsTcpServer(boost::asio::io_context &ioService, VirtualHostManager *virtualHostManager,
                  ModuleManager *moduleManager);
 
-    void start_accept();
+    void handle_accept(TlsTcpConnection *connection, const boost::system::error_code& error);
 
     std::string get_password();
 
+    void start_accept() override;
+
 private:
+
+    boost::asio::io_service& io_service_;
+
     boost::asio::ip::tcp::acceptor acceptor_;
 
     boost::asio::ssl::context context_;

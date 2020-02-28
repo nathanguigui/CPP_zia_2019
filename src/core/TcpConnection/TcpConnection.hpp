@@ -15,6 +15,9 @@
 #include <src/core/VirtualHostsConfig/VirtualHostsConfig.hpp>
 #include <src/core/VirtualHostManager/VirtualHostManager.hpp>
 #include "src/core/ModuleManager/ModuleManager.hpp"
+#include <iostream>
+#include <src/core/VirtualHostManager/VirtualHostManager.hpp>
+#include <src/core/ModuleManager/ModuleManager.hpp>
 
 using namespace boost;
 

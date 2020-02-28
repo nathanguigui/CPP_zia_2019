@@ -23,6 +23,8 @@ public:
 
     const std::string &getModulesEnabledPath() const;
 
+    bool isUseDefaultConfig() const;
+
 private:
 
     bool checkConfigValidity();
@@ -34,6 +36,7 @@ private:
     std::string pidPath_;
     std::string hostsPath_;
     std::string modulesEnabledPath_;
+    bool useDefaultConfig_;
 };
 
 

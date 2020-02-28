@@ -30,6 +30,9 @@ public:
     /// Activate hooks called before response
     void handlePreResponse(HttpRequest &request, HttpResponse &response);
 
+    /// Activate hooks called before zia create instances
+    void handlePreStart(std::vector<ServerInstanceConfig> &instances);
+
 
 private:
 
