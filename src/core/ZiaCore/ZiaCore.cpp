@@ -77,9 +77,11 @@ void ZiaCore::startServer() {
         std::cout << instance.useTls << " " << instance.port << std::endl;
         //try {
             if (!instance.useTls) {
+                /*
                 std::cout << "creating server" << std::endl;
                 auto newServer = new TcpServer(ioService_, serverConfig_, virtualHostsConfig_, moduleManager_);
                 this->serverBlocks_.push_back(newServer);
+                 */
             } else {
                 std::cout << "creating tls server" << std::endl;
                 auto newServer = new TlsTcpServer(ioService_, virtualHostManager_, moduleManager_);
