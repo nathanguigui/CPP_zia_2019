@@ -23,6 +23,7 @@ std::string TlsTcpServer::get_password() {
 }
 
 void TlsTcpServer::handle_accept(TlsTcpConnection *connection, const boost::system::error_code &error) {
+    std::cout << "connection accepted";
     if (!error) {
         connection->start();
         acceptor_.async_accept(connection->socket(),
