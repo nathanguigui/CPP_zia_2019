@@ -13,7 +13,7 @@ fi
 cd build
 conan install --build=missing ..
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  cmake ..
+  cmake .. -j `nproc`
 elif [[ "$OSTYPE" == "cygwin" ]]; then
   cmake -G  "Visual Studio 16 2019" ..
 elif [[ "$OSTYPE" == "win32" ]]; then
@@ -21,4 +21,4 @@ elif [[ "$OSTYPE" == "win32" ]]; then
 else
   cmake -G  "Visual Studio 16 2019" ..
 fi
-cmake --build . --config Release
+cmake --build . --config Release -j `nproc`
