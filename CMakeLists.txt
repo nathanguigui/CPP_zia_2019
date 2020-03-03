@@ -98,7 +98,7 @@ if ( MSVC )
     endif()
 else( MSVC )
     add_definitions("-std=c++17")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -pipe -ldl -lcrypto -lssl -g3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -lstdc++fs -pipe -ldl -lcrypto -lssl")
 endif( MSVC )
 
 ADD_LIBRARY(TcpZiaLib STATIC ${TCP_SRC})

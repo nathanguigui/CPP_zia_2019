@@ -26,4 +26,4 @@ elif [[ "$OSTYPE" == "darwin19" ]]; then
 else
   cmake -G  "Visual Studio 16 2019" ..
 fi
-cmake --build . --config Release
+cmake --build . --config Release -j `nproc`
