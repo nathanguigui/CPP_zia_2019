@@ -5,8 +5,8 @@
 #ifndef CPP_ZIA_2019_MODULEMANAGER_HPP
 #define CPP_ZIA_2019_MODULEMANAGER_HPP
 
-#ifdef WIN32
-
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+    #include <windows.h>
 #else
     #include <dlfcn.h>
 #endif

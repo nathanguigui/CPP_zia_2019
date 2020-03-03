@@ -8,13 +8,25 @@ ModuleManager::ModuleManager(const std::string &modulesPath) : modulesPath_(modu
     std::cout << "Searching module in path: " << modulesPath << std::endl;
     try {
         for (auto& p: std::filesystem::directory_iterator(modulesPath_)) {
+            #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+            if (p.path().string().substr(p.path().string().find_last_of('.') + 1) == "dll") {
+            #else
             if (p.path().string().substr(p.path().string().find_last_of('.') + 1) == "so") {
+            #endif
                 //std::ifstream in(p.path());
-                #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-                    // TODO open lib in windows
-                #else
                     ModuleToolbox moduleToolbox{};
                     std::cout << "Trying to load module: " << p.path().string().c_str() << std::endl;
+                #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+                    // TODO open lib in windows
+                    moduleToolbox.libHandle = LoadLibrary(p.path().string().c_str());
+                    if (moduleToolbox.libHandle) {
+                        moduleToolbox.constructor = (IModule * (*)()) = GetProcAddress(moduleToolbox.libHandle, "createObject");
+                        moduleToolbox.destructor = (void (*)(IModule *))GetProcAddress(moduleToolbox.libHandle, "destroyObject");
+                        moduleToolbox.module = (IModule *)moduleToolbox.constructor();
+                        modulesList_.push_back(moduleToolbox);
+                        std::cout << "Found module: " << p.path() << std::endl;
+                    }
+                #else
                     moduleToolbox.libHandle = dlopen(p.path().string().c_str(), RTLD_LAZY);
                     if (moduleToolbox.libHandle) {
                         moduleToolbox.constructor = (IModule * (*)())dlsym(moduleToolbox.libHandle, "createObject");
