@@ -9,6 +9,7 @@
 #include <src/core/VirtualHostsConfig/VirtualHostsConfig.hpp>
 #include <zia_modules/includes/HttpResponse/HttpResponse.hpp>
 #include "zia_modules/includes/HttpRequest/HttpRequest.hpp"
+#include <boost/algorithm/string.hpp>
 #include "src/core/MimeTypes/MimeTypes.hpp"
 
 class VirtualHostManager {
