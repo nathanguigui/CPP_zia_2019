@@ -44,6 +44,7 @@ void VirtualHostManager::access(HttpRequest &httpRequest, std::string hostname, 
                         std::string path = host["host_root"].asString() + httpRequest.uri;
                         #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
                         boost::replace_all(path, "/", "\\");
+                        std::cout << path << std::endl;
                         #endif
                         std::ifstream file(path);
                         std::stringstream ss;
