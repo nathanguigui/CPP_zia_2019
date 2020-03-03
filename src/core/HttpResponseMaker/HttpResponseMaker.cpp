@@ -71,7 +71,7 @@ void HttpResponseMaker::addMessageFromCode(std::stringstream &ss, HttpResponseMa
 std::string HttpResponseMaker::serializeHttpResponse(HttpResponse response) {
     std::stringstream ss;
     ss << "HTTP/" << response.httpMajorVersion << "." << response.httpMinorVersion << " " << response.responseCode << " " << response.responseMessage <<"\r\n";
-    ss << "Content-Length: " << response.body.size() << "\r\n";
+    ss << "Content-Length: " << (response.body.size() > 65535 ? 65535 : response.body.size()) << "\r\n";
     HttpResponseMaker::setHeaders(ss, response);
     ss << "\r\n" << response.body << "\r\n";
     return ss.str();
