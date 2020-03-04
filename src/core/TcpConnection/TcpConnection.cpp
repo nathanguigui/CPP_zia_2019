@@ -52,10 +52,17 @@ void TcpConnection::handle_read(const boost::system::error_code &err, size_t byt
             HttpResponseMaker::addMessageFromCode(httpResponse_, HttpResponseMaker::ResponseCode::SUCCESS);
             this->virtualHostsConfig_->access(httpRequest_, socket_.remote_endpoint().address().to_string(), httpResponse_);
             this->moduleManager_->handlePreResponse(httpRequest_, httpResponse_);
-            asio::async_write(socket_, asio::buffer(HttpResponseMaker::serializeHttpResponse(httpResponse_)),
+            if (httpResponse_.body.empty()) {
+                asio::async_write(socket_, asio::buffer(httpResponseMaker_.makeStockResponse(HttpResponseMaker::NOT_FOUND)),
                     boost::bind(&TcpConnection::handle_write, shared_from_this(),
                             asio::placeholders::error,
                             asio::placeholders::bytes_transferred));
+            } else {
+                asio::async_write(socket_, asio::buffer(HttpResponseMaker::serializeHttpResponse(httpResponse_)),
+                    boost::bind(&TcpConnection::handle_write, shared_from_this(),
+                            asio::placeholders::error,
+                            asio::placeholders::bytes_transferred));
+            }
         } else if (!result) {
             httpRequest_.valid = false;
             this->moduleManager_->handleRequest(httpRequest_);

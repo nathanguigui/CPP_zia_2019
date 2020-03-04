@@ -47,9 +47,15 @@ void TlsTcpConnection::handle_read(const boost::system::error_code &error, size_
             HttpResponseMaker::addMessageFromCode(httpResponse_, HttpResponseMaker::SUCCESS);
             this->virtualHostManager_->access(httpRequest_, this->socket().remote_endpoint().address().to_string(), httpResponse_);
             this->moduleManager_->handlePreResponse(httpRequest_, httpResponse_);
-            asio::async_write(socket_, asio::buffer(HttpResponseMaker::serializeHttpResponse(httpResponse_)),
+            if (httpResponse_.body.empty()) {
+                asio::async_write(socket_, asio::buffer(httpResponseMaker_.makeStockResponse(HttpResponseMaker::NOT_FOUND)),
                     boost::bind(&TlsTcpConnection::handle_write, this,
                             asio::placeholders::error));
+            } else {
+                asio::async_write(socket_, asio::buffer(HttpResponseMaker::serializeHttpResponse(httpResponse_)),
+                    boost::bind(&TlsTcpConnection::handle_write, this,
+                            asio::placeholders::error));
+            }
         } else if (!result) {
             httpRequest_.valid = false;
             this->moduleManager_->handleRequest(httpRequest_);
