@@ -21,6 +21,26 @@ std::string HttpResponseMaker::makeStockResponse(HttpResponseMaker::ResponseCode
     ss << "HTTP/" << httpMajorVersion_ << "." << httpMinorVersion_ << " " << code << " ";
     this->addMessageFromCode(ss, code);
     this->setHeaders(ss);
+    switch (code) {
+        case SUCCESS:
+            break;
+        case REDIRECT_PERMANENT:
+            break;
+        case REDIRECT_TEMP:
+            break;
+        case BAD_REQUEST:
+            ss << "Content-Length: " << 13 << "\r\n";
+            break;
+        case USER_NOT_AUTH:
+            break;
+        case ACCESS_DENIED:
+            break;
+        case NOT_FOUND:
+            ss << "Content-Length: " << 11 << "\r\n";
+            break;
+        case SERVER_ERROR:
+            break;
+    }
     ss << "Content-Type: text/html\r\n\r\n";
     this->addMessageFromCode(ss, code);
     return ss.str();
@@ -71,7 +91,7 @@ void HttpResponseMaker::addMessageFromCode(std::stringstream &ss, HttpResponseMa
 std::string HttpResponseMaker::serializeHttpResponse(HttpResponse response) {
     std::stringstream ss;
     ss << "HTTP/" << response.httpMajorVersion << "." << response.httpMinorVersion << " " << response.responseCode << " " << response.responseMessage <<"\r\n";
-    ss << "Content-Length: " << response.body.size() << "\r\n";
+    ss << "Content-Length: " << (response.body.size() > 65535 ? 65535 : response.body.size()) << "\r\n";
     HttpResponseMaker::setHeaders(ss, response);
     ss << "\r\n" << response.body << "\r\n";
     return ss.str();
